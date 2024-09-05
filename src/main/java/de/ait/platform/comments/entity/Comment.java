@@ -1,5 +1,6 @@
 package de.ait.platform.comments.entity;
 
+import de.ait.platform.article.entity.Article;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,5 +22,9 @@ public class Comment {
 
     @Column(name="text")
     private String text;
+
+    @ManyToOne
+    @JoinColumn(name = "article_id")
+    private Article article;
 
 }

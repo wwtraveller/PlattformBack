@@ -1,10 +1,14 @@
 package de.ait.platform.article.entity;
 
+import de.ait.platform.category.entity.Category;
+import de.ait.platform.comments.entity.Comment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,5 +32,9 @@ public class Article {
     @Column(name = "photo")
     private String photo;
 
+    @ManyToMany(mappedBy = "articles")
+    private Set<Category> categories;
 
+    @OneToMany(mappedBy = "articles", cascade = CascadeType.ALL)
+    private Set<Comment> comments;
 }

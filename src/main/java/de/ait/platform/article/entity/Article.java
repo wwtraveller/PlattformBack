@@ -31,10 +31,10 @@ public class Article {
 
     @Column(name = "photo")
     private String photo;
-
-    @ManyToMany(mappedBy = "articles")
-    private Set<Category> categories;
-
-    @OneToMany(mappedBy = "articles", cascade = CascadeType.ALL)
-    private Set<Comment> comments;
+//
+//    @ManyToMany(mappedBy = "articles")
+//    private Set<Category> categories;
+//
+//    @OneToMany(mappedBy = "articles", cascade = CascadeType.ALL)
+//    private Set<Comment> comments;
 }

@@ -49,7 +49,7 @@ public class User {
     )
     private Set<Role> roles;
 
-    @Override
+   /* @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
@@ -67,5 +67,5 @@ public class User {
         result = 31 * result + Objects.hashCode(photo);
         result = 31 * result + Objects.hashCode(roles);
         return result;
-    }
+    }*/
 }

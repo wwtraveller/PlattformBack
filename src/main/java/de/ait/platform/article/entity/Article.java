@@ -31,10 +31,14 @@ public class Article {
 
     @Column(name = "photo")
     private String photo;
-//
-//    @ManyToMany(mappedBy = "articles")
-//    private Set<Category> categories;
-//
-//    @OneToMany(mappedBy = "articles", cascade = CascadeType.ALL)
-//    private Set<Comment> comments;
+    @ManyToMany
+    @JoinTable(
+            name = "categories_articles",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private Set<Comment> comments;
 }

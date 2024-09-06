@@ -25,4 +25,11 @@ public class Category {
 
     @Column(name = "name")
     private String name;
+
+    @ManyToMany
+    @JoinTable( name="categories_articles",
+            joinColumns = @JoinColumn(name="category_id"),
+            inverseJoinColumns = @JoinColumn(name="article_id")
+    )
+    private List<Article> articles = new ArrayList<>();
 }

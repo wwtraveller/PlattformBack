@@ -23,8 +23,8 @@ public class Comment {
     @Column(name="text")
     private String text;
 
-//    @ManyToOne
-//    @JoinColumn(name = "article_id")
-//    private Article article;
+    @ManyToOne
+    @JoinColumn(name = "article_id")
+    private Article article;
 
 }

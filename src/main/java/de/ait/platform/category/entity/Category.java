@@ -25,7 +25,4 @@ public class Category {
 
     @Column(name = "name")
     private String name;
-
-    @ManyToMany(mappedBy = "categories")
-    private List<Article> articles = new ArrayList<>();
 }

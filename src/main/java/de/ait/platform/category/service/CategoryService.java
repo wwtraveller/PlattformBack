@@ -8,8 +8,9 @@ import java.util.List;
 
 public interface CategoryService {
     List<CategoryResponse> findAll();
-    CategoryResponse findById(int id);
-    CategoryResponse findByName(String name);
-    CategoryResponse save(CategoryRequest categoryDTO);
+    CategoryResponse findById(Long id);
+    List<CategoryResponse> findByName(String name);
     CategoryResponse delete(Long id);
+    CategoryResponse save(CategoryRequest categoryDTO);
+    CategoryResponse update(Long id, CategoryRequest categoryDTO);
 }

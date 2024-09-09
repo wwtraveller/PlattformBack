@@ -20,18 +20,18 @@ public class ArticleServiceImp implements ArticleService {
     private final ModelMapper mapper;
 
     @Override
-    public List<RequestArticle> fingAll() {
+    public List<ResponseArticle> fingAll() {
         List<Article> list = repository.findAll();
         return list.stream()
-                .map(article -> mapper.map(article, RequestArticle.class))
+                .map(article -> mapper.map(article, ResponseArticle.class))
                 .toList();
     }
 
     @Override
-    public RequestArticle fingById(Long id) {
+    public ResponseArticle fingById(Long id) {
         Optional<Article> article = repository.findById(id);
         if (article.isPresent()) {
-            return mapper.map(article.get(), RequestArticle.class);
+            return mapper.map(article.get(), ResponseArticle.class);
         }
         else {
             String message = "Article with id: " + id + " not found";
@@ -40,31 +40,31 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public List<RequestArticle> fingByTitle(String title) {
+    public List<ResponseArticle> fingByTitle(String title) {
         Predicate<Article> predicateByTitle =
                 (title.equals("")) ? a-> true:  article -> article.getTitle().equalsIgnoreCase(title);
         List<Article> articleList = repository.findAll().stream().filter(predicateByTitle).toList();
-        return articleList.stream().map(article -> mapper.map(article, RequestArticle.class)).toList();
+        return articleList.stream().map(article -> mapper.map(article, ResponseArticle.class)).toList();
     }
 
     @Override
-    public RequestArticle createArticle(ResponseArticle dto) {
+    public ResponseArticle createArticle(RequestArticle dto) {
         repository.save(mapper.map(dto, Article.class));
-        return mapper.map(dto, RequestArticle.class);
+        return mapper.map(dto, ResponseArticle.class);
     }
 
     @Override
-    public RequestArticle updateArticle(Long id, ResponseArticle dto) {
+    public ResponseArticle updateArticle(Long id, RequestArticle dto) {
         Article article = mapper.map(dto, Article.class);
         article.setId(id);
         Article entity = repository.save(article);
-        return mapper.map(entity, RequestArticle.class);
+        return mapper.map(entity, ResponseArticle.class);
     }
 
     @Override
-    public RequestArticle deleteArticle(Long id) {
+    public ResponseArticle deleteArticle(Long id) {
         Optional<Article> foundedArticle = repository.findById(id);
         repository.deleteById(id);
-        return mapper.map(foundedArticle, RequestArticle.class);
+        return mapper.map(foundedArticle, ResponseArticle.class);
     }
 }

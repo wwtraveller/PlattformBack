@@ -36,7 +36,7 @@ public class CategoryServiceImp implements CategoryService {
     @Override
     public List<CategoryResponse> findByName(String name) {
         String message = "Couldn't find category with name:" + name;
-        List<Category> foundCategory = repository.findByTitle(name);
+        List<Category> foundCategory = repository.findByName(name);
         if (foundCategory == null) {
             throw new CategoryNotFound(message);
         }

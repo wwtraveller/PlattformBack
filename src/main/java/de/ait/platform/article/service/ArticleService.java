@@ -6,11 +6,11 @@ import de.ait.platform.article.dto.RequestArticle;
 import java.util.List;
 
 public interface ArticleService {
-    List<RequestArticle> fingAll();
-    RequestArticle fingById(Long id);
-    List<RequestArticle> fingByTitle(String title);
-    RequestArticle createArticle(ResponseArticle article);
-    RequestArticle updateArticle(Long id, ResponseArticle article);
-    RequestArticle deleteArticle(Long id);
+    List<ResponseArticle> fingAll();
+    ResponseArticle fingById(Long id);
+    List<ResponseArticle> fingByTitle(String title);
+    ResponseArticle createArticle(RequestArticle article);
+    ResponseArticle updateArticle(Long id, RequestArticle article);
+    ResponseArticle deleteArticle(Long id);
 
 }

@@ -2,6 +2,7 @@ package de.ait.platform.article.entity;
 
 import de.ait.platform.category.entity.Category;
 import de.ait.platform.comments.entity.Comment;
+import de.ait.platform.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,4 +42,8 @@ public class Article {
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private Set<Comment> comments;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

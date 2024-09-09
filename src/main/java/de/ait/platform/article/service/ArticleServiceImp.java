@@ -1,11 +1,10 @@
 package de.ait.platform.article.service;
 
-import de.ait.platform.article.dto.RequestArticle;
 import de.ait.platform.article.dto.ResponseArticle;
+import de.ait.platform.article.dto.RequestArticle;
 import de.ait.platform.article.entity.Article;
 import de.ait.platform.article.exception.ArticleNotFound;
 import de.ait.platform.article.repository.ArticleRepository;
-import de.ait.platform.category.dto.CategoryRequest;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -19,19 +18,20 @@ import java.util.function.Predicate;
 public class ArticleServiceImp implements ArticleService {
     private final ArticleRepository repository;
     private final ModelMapper mapper;
+
     @Override
-    public List<ResponseArticle> fingAll() {
+    public List<RequestArticle> fingAll() {
         List<Article> list = repository.findAll();
         return list.stream()
-                .map(article -> mapper.map(article, ResponseArticle.class))
+                .map(article -> mapper.map(article, RequestArticle.class))
                 .toList();
     }
 
     @Override
-    public ResponseArticle fingById(Long id) {
+    public RequestArticle fingById(Long id) {
         Optional<Article> article = repository.findById(id);
         if (article.isPresent()) {
-            return mapper.map(article.get(), ResponseArticle.class);
+            return mapper.map(article.get(), RequestArticle.class);
         }
         else {
             String message = "Article with id: " + id + " not found";
@@ -40,31 +40,31 @@ public class ArticleServiceImp implements ArticleService {
     }
 
     @Override
-    public List<ResponseArticle> fingByTitle(String title) {
+    public List<RequestArticle> fingByTitle(String title) {
         Predicate<Article> predicateByTitle =
                 (title.equals("")) ? a-> true:  article -> article.getTitle().equalsIgnoreCase(title);
         List<Article> articleList = repository.findAll().stream().filter(predicateByTitle).toList();
-        return articleList.stream().map(article -> mapper.map(article, ResponseArticle.class)).toList();
+        return articleList.stream().map(article -> mapper.map(article, RequestArticle.class)).toList();
     }
 
     @Override
-    public ResponseArticle createArticle(RequestArticle dto) {
+    public RequestArticle createArticle(ResponseArticle dto) {
         repository.save(mapper.map(dto, Article.class));
-        return mapper.map(dto, ResponseArticle.class);
+        return mapper.map(dto, RequestArticle.class);
     }
 
     @Override
-    public ResponseArticle updateArticle(Long id, RequestArticle dto) {
+    public RequestArticle updateArticle(Long id, ResponseArticle dto) {
         Article article = mapper.map(dto, Article.class);
         article.setId(id);
         Article entity = repository.save(article);
-        return mapper.map(entity, ResponseArticle.class);
+        return mapper.map(entity, RequestArticle.class);
     }
 
     @Override
-    public ResponseArticle deleteArticle(Long id) {
-        repository.deleteById(id);
+    public RequestArticle deleteArticle(Long id) {
         Optional<Article> foundedArticle = repository.findById(id);
-        return mapper.map(foundedArticle, ResponseArticle.class);
+        repository.deleteById(id);
+        return mapper.map(foundedArticle, RequestArticle.class);
     }
 }

@@ -9,6 +9,7 @@ import java.util.List;
 public interface CommentsService {
         List<CommentsResponseDto> getAllComments();
         Comment getCommentById(Long id);
-        CommentsResponseDto saveComment(CommentsRequestDto comment);  // Тут приймає DTO
+        CommentsResponseDto save(CommentsRequestDto comment);
         void deleteComment(Long id);
+        CommentsResponseDto updateComment(Long id, CommentsRequestDto comment);
 }

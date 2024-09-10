@@ -1,6 +1,6 @@
 package de.ait.platform.user.entity;
 
-import de.ait.platform.comments.entity.Comment;
+import de.ait.platform.user.comments.entity.Comment;
 import de.ait.platform.role.entity.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

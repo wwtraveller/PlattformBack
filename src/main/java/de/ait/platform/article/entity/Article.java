@@ -1,7 +1,7 @@
 package de.ait.platform.article.entity;
 
 import de.ait.platform.category.entity.Category;
-import de.ait.platform.comments.entity.Comment;
+import de.ait.platform.user.comments.entity.Comment;
 import de.ait.platform.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

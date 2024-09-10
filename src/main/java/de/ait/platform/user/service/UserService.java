@@ -11,9 +11,9 @@ public interface UserService {
     UserResponseDto createUser(UserRequestDto dto);
     UserResponseDto updateUser(Long id, UserRequestDto dto);
     UserResponseDto deleteUser(Long id);
-    List<UserResponseDto> getUser();
+    List<UserResponseDto> getUsers();
     UserResponseDto getUserById(Long id);
-    List<UserResponseDto> getUserByTitle(String title);
+    List<UserResponseDto> getUserByEmail(String email);
 
 
 }

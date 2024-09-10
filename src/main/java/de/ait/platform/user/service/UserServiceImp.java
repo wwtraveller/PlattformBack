@@ -1,15 +1,15 @@
 package de.ait.platform.user.service;
 
-import de.ait.platform.article.dto.ResponseArticle;
-import de.ait.platform.article.entity.Article;
-import de.ait.platform.article.exception.ArticleNotFound;
+
+import de.ait.platform.category.dto.CategoryResponse;
+import de.ait.platform.category.entity.Category;
+import de.ait.platform.category.exceptions.CategoryNotFound;
 import de.ait.platform.user.dto.UserRequestDto;
 import de.ait.platform.user.dto.UserResponseDto;
 import de.ait.platform.user.entity.User;
 import de.ait.platform.user.exceptions.UserNotFound;
 import de.ait.platform.user.reposittory.UserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
@@ -18,16 +18,10 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 @Service
-
-public class UserServiceImp implements UserService{
-private final UserRepository repository;
-private final ModelMapper mapper;
-
-// todo remove constructors
-    public UserServiceImp(UserRepository repository, ModelMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
+@RequiredArgsConstructor
+public class UserServiceImp implements UserService {
+    private final UserRepository repository;
+    private final ModelMapper mapper;
 
 
     @Override
@@ -41,26 +35,30 @@ private final ModelMapper mapper;
     }
 
 
-
     @Override
     public UserResponseDto updateUser(Long id, UserRequestDto dto) {
         User user = mapper.map(dto, User.class);
         user.setId(id);
-        Article entity = repository.save(user);
-        return null; //mapper.map(entity, UserResponseDto.class);
+        User entity = repository.save(user);
+        return mapper.map(entity, UserResponseDto.class);
     }
 
     @Override
     public UserResponseDto deleteUser(Long id) {
-        Optional<User> foundedUser = repository.findById(id);
-        repository.deleteById(id);
-        return mapper.map(foundedUser, UserResponseDto.class);
+        Optional<User> user = repository.findById(id);
+        if (user.isPresent()) {
+            repository.deleteById(id);
+        }
+        else {
+            throw new UserNotFound("Error deleting user. Couldn't find user with id:" + id);
+        }
+        return mapper.map(user, UserResponseDto.class);
     }
 
     @Override
-    public List<UserResponseDto> getUser() {
+    public List<UserResponseDto> getUsers() {
         List<User> users = repository.findAll();
-        return users.stream().map(u->mapper.map(u,UserResponseDto.class)).toList();
+        return users.stream().map(u -> mapper.map(u, UserResponseDto.class)).toList();
     }
 
     @Override
@@ -68,18 +66,17 @@ private final ModelMapper mapper;
         Optional<User> user = repository.findById(id);
         if (user.isPresent()) {
             return mapper.map(user.get(), UserResponseDto.class);
-        }
-        else {
+        } else {
             String message = "User with id: " + id + " not found";
             throw new UserNotFound(message);
         }
     }
 
     @Override
-    public List<UserResponseDto> getUserByTitle(String title) {
-        Predicate<User> predicateByTitle =
-                (title.equals("")) ? u-> true:  user -> user.getTitle().equalsIgnoreCase(title);
-        List<User> userList = repository.findAll().stream().filter(predicateByTitle).toList();
+    public List<UserResponseDto> getUserByEmail(String email) {
+        Predicate<User> predicateByEmail =
+                (email.equals("")) ? u -> true : user -> user.getEmail().equalsIgnoreCase(email);
+        List<User> userList = repository.findAll().stream().filter(predicateByEmail).toList();
         return userList.stream().map(user -> mapper.map(user, UserResponseDto.class)).toList();
     }
 }

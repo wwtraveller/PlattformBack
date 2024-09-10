@@ -26,13 +26,9 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User user_id;
 
     @ManyToOne
     @JoinColumn(name = "article_id")
     private Article article;
-//    @ManyToOne
-//    @JoinColumn(name="user_id")
-//    private User user_id;
-
 }

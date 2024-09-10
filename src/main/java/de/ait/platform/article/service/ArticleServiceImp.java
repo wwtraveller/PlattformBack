@@ -19,6 +19,7 @@ public class ArticleServiceImp implements ArticleService {
     private final ArticleRepository repository;
     private final ModelMapper mapper;
 
+
     @Override
     public List<ResponseArticle> fingAll() {
         List<Article> list = repository.findAll();
@@ -49,8 +50,9 @@ public class ArticleServiceImp implements ArticleService {
 
     @Override
     public ResponseArticle createArticle(RequestArticle dto) {
-        repository.save(mapper.map(dto, Article.class));
-        return mapper.map(dto, ResponseArticle.class);
+        Article entity = mapper.map(dto, Article.class);
+        repository.save(entity);
+        return mapper.map(entity, ResponseArticle.class);
     }
 
     @Override

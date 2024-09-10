@@ -27,11 +27,8 @@ public class UserServiceImp implements UserService {
     @Override
     public UserResponseDto createUser(UserRequestDto dto) {
         User entity = mapper.map(dto, User.class); // dto превращаем в entity
-
-
         entity = repository.save(entity);
-        UserResponseDto userResponseDto = mapper.map(entity, UserResponseDto.class);
-        return userResponseDto;
+        return mapper.map(entity, UserResponseDto.class);
     }
 
 

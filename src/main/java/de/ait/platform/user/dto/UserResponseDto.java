@@ -1,20 +1,14 @@
 package de.ait.platform.user.dto;
 
-import de.ait.platform.role.entity.Role;
-import de.ait.platform.user.comments.entity.Comment;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
 
-public class UserResponseDto {
-    @AllArgsConstructor
-    @NoArgsConstructor
+@NoArgsConstructor
     @Getter
     @Setter
-    public class User {
+    public class UserResponseDto {
 
         private Long id;
 
@@ -26,5 +20,12 @@ public class UserResponseDto {
 
         private String photo;
 
+        public UserResponseDto(Long id, String firstName, String lastName, String email, String photo) {
+            this.id = id;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+            this.photo = "https://img.favpng.com/20/8/6/computer-icons-business-facebook-bank-symbol-png-favpng-5S9wcfPXkrmFfNr5x9ASw1BH9.jpg";
+        }
     }
-}
+

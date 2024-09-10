@@ -24,12 +24,12 @@ public class UserController {
     private final UserService service;
 
 
-    @PostMapping(name = "/users")
+    @PostMapping("/users")
     public UserResponseDto createUser(@RequestBody UserRequestDto dto) {
         return service.createUser(dto);
     }
 
-    @GetMapping(name = "/users")
+    @GetMapping("/users")
     public List<UserResponseDto> getUsers() {
         return service.getUsers();
     }
@@ -45,7 +45,7 @@ public class UserController {
         return service.updateUser(id, dto);
     }
 
-    @DeleteMapping("/users{id}")
+    @DeleteMapping("/users/{id}")
     public UserResponseDto deleteUser(@PathVariable Long id) {
         return service.deleteUser(id);
     }

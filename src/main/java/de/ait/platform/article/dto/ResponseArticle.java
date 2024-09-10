@@ -1,6 +1,6 @@
 package de.ait.platform.article.dto;
 
-import de.ait.platform.user.comments.entity.Comment;
+import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,5 +1,4 @@
 package de.ait.platform.comments.service;
-
 import de.ait.platform.comments.dto.CommentsRequestDto;
 import de.ait.platform.comments.dto.CommentsResponseDto;
 import de.ait.platform.comments.entity.Comment;
@@ -25,11 +24,11 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
-    public Comment getCommentById(Long commentid) {
+    public CommentsResponseDto getCommentById(Long commentid) {
         Comment comment = commentsRepository
                 .findById(commentid)
                 .orElseThrow(()-> new CommentNotFound("Comment not found"));
-        return comment;
+        return new CommentsResponseDto();
     }
 
     @Transactional

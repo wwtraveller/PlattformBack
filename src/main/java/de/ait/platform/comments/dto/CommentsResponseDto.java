@@ -12,7 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CommentsResponseDto {
-
     private Long id;
     private String text;
     private UserResponseDto user;

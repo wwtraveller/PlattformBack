@@ -1,30 +1,24 @@
 package de.ait.platform.user.dto;
 
-import de.ait.platform.role.entity.Role;
-import de.ait.platform.user.comments.entity.Comment;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
 
+@NoArgsConstructor
+@Getter
+@Setter
 public class UserRequestDto {
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-    @Setter
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String photo;
 
-    public class User {
-
-        private Long id;
-
-        private String firstName;
-
-        private String lastName;
-
-        private String email;
-
+    public UserRequestDto(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.photo = "https://img.favpng.com/20/8/6/computer-icons-business-facebook-bank-symbol-png-favpng-5S9wcfPXkrmFfNr5x9ASw1BH9.jpg";
 
     }
 }

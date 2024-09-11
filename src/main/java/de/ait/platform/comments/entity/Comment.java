@@ -1,4 +1,4 @@
-package de.ait.platform.user.comments.entity;
+package de.ait.platform.comments.entity;
 
 import de.ait.platform.article.entity.Article;
 import de.ait.platform.user.entity.User;
@@ -31,8 +31,4 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "article_id")
     private Article article;
-//    @ManyToOne
-//    @JoinColumn(name="user_id")
-//    private User user_id;
-
 }

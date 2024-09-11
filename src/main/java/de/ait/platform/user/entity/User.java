@@ -4,10 +4,7 @@ import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.role.entity.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,7 +24,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -39,7 +35,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "t_user")
-
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,7 +52,7 @@ public class User implements UserDetails {
     @Column(name = "photo")
     private String photo;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -70,7 +65,7 @@ public class User implements UserDetails {
     private Set<Comment> comments;
 
     @PrePersist
-    private void init(){
+    private void init() {
         dateCreated = LocalDateTime.now();
     }
 
@@ -79,24 +74,21 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
 
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(photo, user.photo) && Objects.equals(roles, user.roles);
+        return id.equals(user.id) && firstName.equals(user.firstName) && lastName.equals(user.lastName) && email.equals(user.email);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hashCode(id);
-        result = 31 * result + Objects.hashCode(firstName);
-        result = 31 * result + Objects.hashCode(lastName);
-        result = 31 * result + Objects.hashCode(email);
-        result = 31 * result + Objects.hashCode(password);
-        result = 31 * result + Objects.hashCode(photo);
-        result = 31 * result + Objects.hashCode(roles);
+        int result = id.hashCode();
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        result = 31 * result + email.hashCode();
         return result;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return (Collection<? extends GrantedAuthority>) roles;
+        return roles;
     }
 
     @Override

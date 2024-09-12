@@ -37,7 +37,7 @@ public CommentsResponseDto getCommentById(@PathVariable Long id) {
 
     @DeleteMapping("/{id}")
     public CommentsResponseDto deleteComment(@PathVariable Long id) {
-        commentsService.deleteComment(id);
-        return  null;
+return commentsService.deleteComment(id);
+
     }
 }

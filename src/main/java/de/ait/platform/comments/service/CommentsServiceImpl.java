@@ -23,13 +23,14 @@ public class CommentsServiceImpl implements CommentsService {
         return comments.stream().map(c->mapper.map(c, CommentsResponseDto.class)).toList();
     }
 
-    @Override
-    public CommentsResponseDto getCommentById(Long commentid) {
-        Comment comment = commentsRepository
-                .findById(commentid)
-                .orElseThrow(()-> new CommentNotFound("Comment not found"));
-        return new CommentsResponseDto();
-    }
+
+@Override
+public CommentsResponseDto getCommentById(Long id) {
+    Comment comment = commentsRepository
+            .findById(id)
+            .orElseThrow(() -> new CommentNotFound("Comment not found"));
+    return mapper.map(comment, CommentsResponseDto.class);
+}
 
     @Transactional
     @Override
@@ -39,15 +40,16 @@ public class CommentsServiceImpl implements CommentsService {
         return mapper.map(newComment, CommentsResponseDto.class);
     }
 
-    @Transactional
-    @Override
-    public void deleteComment(Long id) {
-        if (commentsRepository.existsById(id)) {
-            commentsRepository.deleteById(id);
-        } else {
-            throw new CommentNotFound("Comment with id " + id + " does not exist");
-        }
-    }
+
+@Transactional
+@Override
+public CommentsResponseDto deleteComment(Long id) {
+    Comment comment = commentsRepository
+            .findById(id)
+            .orElseThrow(() -> new CommentNotFound("Comment not found"));
+    commentsRepository.deleteById(id);
+    return mapper.map(comment, CommentsResponseDto.class);
+}
 
     @Override
     @Transactional

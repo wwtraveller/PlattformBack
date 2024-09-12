@@ -7,6 +7,6 @@ public interface CommentsService {
         List<CommentsResponseDto> getAllComments();
         CommentsResponseDto getCommentById(Long id);
         CommentsResponseDto save(CommentsRequestDto comment);
-        void deleteComment(Long id);
+        CommentsResponseDto deleteComment(Long id);
         CommentsResponseDto updateComment(Long id, CommentsRequestDto comment);
 }

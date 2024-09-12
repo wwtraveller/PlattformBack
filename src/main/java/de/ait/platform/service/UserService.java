@@ -1,4 +1,4 @@
-package de.ait.platform.user.service;
+package de.ait.platform.service;
 import de.ait.platform.article.dto.RequestArticle;
 import de.ait.platform.article.dto.ResponseArticle;
 import de.ait.platform.user.dto.UserRequestDto;

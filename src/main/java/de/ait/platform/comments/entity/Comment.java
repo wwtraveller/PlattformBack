@@ -1,18 +1,13 @@
 package de.ait.platform.comments.entity;
-
 import de.ait.platform.article.entity.Article;
 import de.ait.platform.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-
 @Entity
 @Table(name = "comments")
 public class Comment {
@@ -31,4 +26,11 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "article_id")
     private Article article;
+
+    public Comment(Long id, String text, User user, Article article) {
+        this.id = id;
+        this.text = text;
+        this.user = user;
+        this.article = article;
+    }
 }

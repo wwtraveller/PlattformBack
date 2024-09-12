@@ -1,7 +1,6 @@
 package de.ait.platform.comments.dto;
-
 import lombok.*;
-
+@AllArgsConstructor
 @EqualsAndHashCode
 @NoArgsConstructor
 @Getter
@@ -9,13 +8,6 @@ import lombok.*;
 public class CommentsRequestDto {
 
     private String text;
-    private Long userId;
-    private Long articleId;
-
-    public CommentsRequestDto(Long articleId, Long userId, String text) {
-        this.articleId = articleId;
-        this.userId = userId;
-        this.text = text;
-    }
-
+    private Long user_id;
+    private Long article_id;
 }

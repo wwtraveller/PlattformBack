@@ -8,36 +8,36 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/comments")
+@RequestMapping("/api")
 public class CommentController {
 
     private final CommentsService commentsService;
 
-        @GetMapping
+    @GetMapping("/comments")
     public List<CommentsResponseDto> getAllComments() {
         return commentsService.getAllComments();
     }
 
-@GetMapping("/{id}")
-public CommentsResponseDto getCommentById(@PathVariable Long id) {
+    @GetMapping("/comments/{id}")
+    public CommentsResponseDto getCommentById(@PathVariable Long id) {
     return commentsService.getCommentById(id);
-}
+    }
 
-    @PostMapping
+    @PostMapping("/comments")
     public CommentsResponseDto createComment(@RequestBody CommentsRequestDto commentDto) {
         return  commentsService.save(commentDto);
-        }
+    }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/comments/{id}")
     public CommentsResponseDto updateComment(@PathVariable Long id, @RequestBody CommentsRequestDto commentDto) {
+        System.out.println(id);
         return  commentsService.updateComment(id, commentDto);
-        }
+    }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/comments/{id}")
     public CommentsResponseDto deleteComment(@PathVariable Long id) {
-return commentsService.deleteComment(id);
-
+    return commentsService.deleteComment(id);
     }
 }

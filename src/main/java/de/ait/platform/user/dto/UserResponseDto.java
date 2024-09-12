@@ -1,16 +1,16 @@
 package de.ait.platform.user.dto;
 
 import de.ait.platform.role.entity.Role;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class UserResponseDto {
@@ -29,9 +29,9 @@ public class UserResponseDto {
 
     private Set<Role> roles;
 
-    public UserResponseDto(Long id, String username, String email, Set<Role> roles) {
+
 
 
     }
-}
+
 

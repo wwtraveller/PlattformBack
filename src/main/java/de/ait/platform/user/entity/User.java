@@ -29,7 +29,7 @@ import java.util.Objects;
 import java.util.Set;
 
 
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -65,6 +65,10 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Comment> comments;
+
+    public User(Object o, String username, String email, String encodedPassword, HashSet<Role> setRole) {
+
+    }
 
 
     @PrePersist

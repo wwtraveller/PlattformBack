@@ -1,9 +1,6 @@
-package de.ait.platform.user.service;
+package de.ait.platform.service;
 
 
-import de.ait.platform.category.dto.CategoryResponse;
-import de.ait.platform.category.entity.Category;
-import de.ait.platform.category.exceptions.CategoryNotFound;
 import de.ait.platform.user.dto.UserRequestDto;
 import de.ait.platform.user.dto.UserResponseDto;
 import de.ait.platform.user.entity.User;

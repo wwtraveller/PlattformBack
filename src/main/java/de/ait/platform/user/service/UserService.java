@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService extends UserDetailsService {
+public interface UserService{
     UserResponseDto createUser(UserLoginDto dto);
     UserResponseDto updateUser(Long id, UserRequestDto dto);
     UserResponseDto deleteUser(Long id);

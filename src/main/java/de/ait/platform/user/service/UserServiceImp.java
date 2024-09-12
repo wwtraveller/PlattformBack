@@ -1,9 +1,8 @@
 package de.ait.platform.user.service;
 
 
-import de.ait.platform.category.dto.CategoryResponse;
-import de.ait.platform.category.entity.Category;
-import de.ait.platform.category.exceptions.CategoryNotFound;
+import de.ait.platform.role.entity.Role;
+import de.ait.platform.role.service.RoleService;
 import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.user.dto.UserRequestDto;
 import de.ait.platform.user.dto.UserResponseDto;
@@ -14,25 +13,42 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImp implements UserService {
+public class UserServiceImp implements UserService, UserDetailsService {
     private final UserRepository repository;
     private final ModelMapper mapper;
+    private final RoleService roleService;
+    private final BCryptPasswordEncoder encoder;
 
 
     @Override
     public UserResponseDto createUser(UserLoginDto dto) {
-        User entity = mapper.map(dto, User.class);
-        entity = repository.save(entity);
-        return mapper.map(entity, UserResponseDto.class);
+        repository.findUserByUsername(dto.getUsername()).ifPresent(u -> {
+            throw new RuntimeException("User " + u.getUsername() + " already exists");
+        });
+
+        Role role = roleService.getRoleByTitle("ROLE_USER");
+        HashSet<Role> setRole = new HashSet<>();
+        setRole.add(role);
+        String encodedPassword = encoder.encode(dto.getPassword());
+        User newUser = repository.save(new User(dto.getUsername(), dto.getEmail(), encodedPassword, setRole));
+        return new UserResponseDto(
+                newUser.getId(),
+                newUser.getUsername(),
+                newUser.getEmail(),
+                newUser.getRoles()
+        );
+
     }
 
 

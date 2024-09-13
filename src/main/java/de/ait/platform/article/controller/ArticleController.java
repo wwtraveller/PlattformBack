@@ -21,7 +21,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}")
-    private ResponseArticle findById(Long id) {
+    private ResponseArticle findById(@PathVariable Long id) {
         return service.fingById(id);
     }
 

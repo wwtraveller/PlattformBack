@@ -2,9 +2,10 @@ package de.ait.platform.user.controller;
 
 
 
+import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.user.dto.UserRequestDto;
 import de.ait.platform.user.dto.UserResponseDto;
-import de.ait.platform.service.UserService;
+import de.ait.platform.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class UserController {
 
 
     @PostMapping("/users")
-    public UserResponseDto createUser(@RequestBody UserRequestDto dto) {
+    public UserResponseDto createUser(@RequestBody UserLoginDto dto) {
         return service.createUser(dto);
     }
 

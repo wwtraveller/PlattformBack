@@ -76,7 +76,20 @@
             <version>0.12.5</version>
             <scope>runtime</scope>
         </dependency>
+            <!-- Spring Boot Starter Test -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+            </dependency>
 
+            <!-- JUnit 5 -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>5.9.0</version> <!-- Убедитесь, что версия актуальна -->
+                <scope>test</scope>
+            </dependency>
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>

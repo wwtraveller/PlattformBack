@@ -1,17 +1,17 @@
-version: '3.8'
+
 services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile  # Указание на Dockerfile для сборки приложения
+      dockerfile: Dockerfile
     ports:
-      - "8080:8080"  # Открываем порт 8080 для доступа к приложению
+      - "8080:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=prod  # Пример переменной окружения
+      - SPRING_PROFILES_ACTIVE=prod
     depends_on:
-      - postgres  # Указываем, что приложение зависит от сервиса postgres
+      - plattformback-postgres-1  # изменено имя зависимости на новое имя сервиса
 
-  postgres:
+  plattformback-postgres-1:  # изменено имя сервиса
     image: postgres:13.5
     restart: always
     environment:
@@ -22,10 +22,11 @@ services:
     ports:
       - "5434:5432"
     healthcheck:
-        test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-        interval: 10s
-        timeout: 5s
-        retries: 5
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres:
+

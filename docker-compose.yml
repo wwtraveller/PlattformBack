@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Указание на Dockerfile для сборки приложения
+    ports:
+      - "8080:8080"  # Открываем порт 8080 для доступа к приложению
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod  # Пример переменной окружения
+    depends_on:
+      - postgres  # Указываем, что приложение зависит от сервиса postgres
+
+  postgres:
+    image: postgres:13.5
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty007
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+volumes:
+  postgres:

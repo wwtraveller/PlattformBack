@@ -1,34 +1,50 @@
 package de.ait.platform.user.service;
 
 
-import de.ait.platform.category.dto.CategoryResponse;
-import de.ait.platform.category.entity.Category;
-import de.ait.platform.category.exceptions.CategoryNotFound;
+import de.ait.platform.role.entity.Role;
+import de.ait.platform.role.service.RoleService;
+import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.user.dto.UserRequestDto;
 import de.ait.platform.user.dto.UserResponseDto;
 import de.ait.platform.user.entity.User;
 import de.ait.platform.user.exceptions.UserNotFound;
 import de.ait.platform.user.reposittory.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImp implements UserService {
+public class UserServiceImp implements UserService, UserDetailsService {
     private final UserRepository repository;
     private final ModelMapper mapper;
+    private final RoleService roleService;
+    private final BCryptPasswordEncoder encoder;
 
 
     @Override
-    public UserResponseDto createUser(UserRequestDto dto) {
-        User entity = mapper.map(dto, User.class); // dto превращаем в entity
-        entity = repository.save(entity);
-        return mapper.map(entity, UserResponseDto.class);
+    public UserResponseDto createUser(UserLoginDto dto) {
+        repository.findUserByUsername(dto.getUsername()).ifPresent(u -> {
+            throw new RuntimeException("User " + u.getUsername() + " already exists");
+        });
+
+        Role role = roleService.getRoleByTitle("ROLE_USER");
+        HashSet<Role> setRole = new HashSet<>();
+        setRole.add(role);
+        String encodedPassword = encoder.encode(dto.getPassword());
+        User newUser = repository.save(new User(null, dto.getUsername(), dto.getEmail(), encodedPassword, setRole));
+        return mapper.map(newUser, UserResponseDto.class);
+
+
     }
 
 
@@ -45,8 +61,7 @@ public class UserServiceImp implements UserService {
         Optional<User> user = repository.findById(id);
         if (user.isPresent()) {
             repository.deleteById(id);
-        }
-        else {
+        } else {
             throw new UserNotFound("Error deleting user. Couldn't find user with id:" + id);
         }
         return mapper.map(user, UserResponseDto.class);
@@ -75,5 +90,16 @@ public class UserServiceImp implements UserService {
                 (email.equals("")) ? u -> true : user -> user.getEmail().equalsIgnoreCase(email);
         List<User> userList = repository.findAll().stream().filter(predicateByEmail).toList();
         return userList.stream().map(user -> mapper.map(user, UserResponseDto.class)).toList();
+    }
+
+    @Override
+    public UserResponseDto setAdminRole(String email, boolean admin) {
+        return null;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return repository.findUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User with login " + username + " not found"));
     }
 }

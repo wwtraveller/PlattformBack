@@ -7,10 +7,12 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . .
 
+# Give execution permission to mvnw
+RUN chmod +x ./mvnw
+
 # Build the application using Maven wrapper (if you are using mvnw)
 RUN ./mvnw package -DskipTests
 
 # Run the application
 CMD ["java", "-jar", "target/platform-0.0.1-SNAPSHOT.jar"]
 
-RUN chmod +x ./mvnw

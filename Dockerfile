@@ -12,3 +12,5 @@ RUN ./mvnw package -DskipTests
 
 # Run the application
 CMD ["java", "-jar", "target/platform-0.0.1-SNAPSHOT.jar"]
+
+RUN chmod +x ./mvnw

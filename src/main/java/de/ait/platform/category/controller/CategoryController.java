@@ -1,5 +1,6 @@
 package de.ait.platform.category.controller;
 
+import de.ait.platform.article.entity.Article;
 import de.ait.platform.category.dto.CategoryRequest;
 import de.ait.platform.category.dto.CategoryResponse;
 import de.ait.platform.category.entity.Category;
@@ -14,11 +15,11 @@ import java.util.List;
 @RequestMapping("/api")
 public class CategoryController {
     private final CategoryService service;
-
-    @GetMapping("/categories")
-    private List<CategoryResponse> getCategories() {
-        return service.findAll();
-    }
+//
+//    @GetMapping("/categories")
+//    private List<CategoryResponse> getCategories() {
+//        return service.findAll();
+//    }
     @GetMapping("/categories/{id}")
     public CategoryResponse getCategoryById(@PathVariable(name="id") Long id) {
         return service.findById(id);
@@ -37,5 +38,20 @@ public class CategoryController {
     @DeleteMapping("/categories/{id}")
     public CategoryResponse deleteCategory(@PathVariable Long id) {
         return service.delete(id);
+    }
+
+    @PutMapping("/categories/{categoryId}/articles/{articleId}")
+    public List<Article> addArticleToCategory(@PathVariable Long articleId,
+                                              @PathVariable Long categoryId) {
+        return service.addArticleToCategory(articleId, categoryId);
+    }
+
+    @GetMapping("/categories")
+    public List<CategoryResponse> getCategory(@RequestParam(name="title", required = false, defaultValue = "") String title){
+        if (title.isEmpty()) {
+            return service.findAll();
+        } else {
+            return service.findByName(title);
+        }
     }
 }

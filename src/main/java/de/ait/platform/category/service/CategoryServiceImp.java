@@ -1,5 +1,7 @@
 package de.ait.platform.category.service;
 
+import de.ait.platform.article.entity.Article;
+import de.ait.platform.article.repository.ArticleRepository;
 import de.ait.platform.category.dto.CategoryRequest;
 import de.ait.platform.category.dto.CategoryResponse;
 import de.ait.platform.category.entity.Category;
@@ -17,6 +19,8 @@ import java.util.Optional;
 public class CategoryServiceImp implements CategoryService {
     private final ModelMapper mapper;
     private final CategoryRepository repository;
+
+    private final ArticleRepository articleRepository;
     @Override
     public List<CategoryResponse> findAll() {
         List<Category> categories = repository.findAll();
@@ -48,6 +52,21 @@ public class CategoryServiceImp implements CategoryService {
     }
 
 
+    @Override
+    public List<Article> addArticleToCategory(Long articleId, Long categoryId) {
+        Optional<Category> category = repository.findById(categoryId);
+        Optional<Article> article = articleRepository.findById(articleId);
+        if (category.isPresent()) {
+            if (article.isPresent()) {
+                category.get().addArticle(article.get());
+                return category.get().getArticles();
+            }
+        }
+        else {
+            throw new CategoryNotFound("Category with id:" + categoryId + " not found");
+        }
+        return List.of();
+    }
 
     @Override
     public CategoryResponse delete(Long id) {

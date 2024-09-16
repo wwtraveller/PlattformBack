@@ -10,7 +10,6 @@ import de.ait.platform.user.entity.User;
 import de.ait.platform.user.exceptions.UserNotFound;
 import de.ait.platform.user.reposittory.UserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,7 +40,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
         HashSet<Role> setRole = new HashSet<>();
         setRole.add(role);
         String encodedPassword = encoder.encode(dto.getPassword());
-        User newUser = repository.save(new User(null, dto.getUsername(), dto.getEmail(), encodedPassword, setRole));
+        User newUser = repository.save(new User(null, dto.getUsername(), encodedPassword, setRole));
         return mapper.map(newUser, UserResponseDto.class);
 
 
@@ -98,7 +97,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with login " + username + " not found"));
     }

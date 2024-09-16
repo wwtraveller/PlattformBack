@@ -1,6 +1,7 @@
 package de.ait.platform.user.service;
 
 import de.ait.platform.user.dto.TokenResponseDto;
+import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.user.entity.User;
 import io.jsonwebtoken.Claims;
 import jakarta.security.auth.message.AuthException;
@@ -21,7 +22,7 @@ public class AuthService {
 
     private final Map<String, String> refreshTokenStorage = new HashMap<>();
 
-    public TokenResponseDto login(User inboundUser) throws AuthException {
+    public TokenResponseDto login(UserLoginDto inboundUser) throws AuthException {
         String username = inboundUser.getUsername();
         User foundUser = userService.loadUserByUsername(username);
 

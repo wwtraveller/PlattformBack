@@ -9,9 +9,10 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
     depends_on:
-      - plattformback-postgres-1  # изменено имя зависимости на новое имя сервиса
+      - postgres
+  # изменено имя зависимости на новое имя сервиса
 
-  plattformback-postgres-1:  # изменено имя сервиса
+  postgres:  # изменено имя сервиса
     image: postgres:13.5
     restart: always
     environment:

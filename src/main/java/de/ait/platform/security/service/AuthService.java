@@ -1,12 +1,12 @@
-package de.ait.platform.user.service;
+package de.ait.platform.security.service;
 
-import de.ait.platform.user.dto.TokenResponseDto;
+import de.ait.platform.security.dto.TokenResponseDto;
 import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.user.entity.User;
+import de.ait.platform.user.service.UserService;
 import io.jsonwebtoken.Claims;
 import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

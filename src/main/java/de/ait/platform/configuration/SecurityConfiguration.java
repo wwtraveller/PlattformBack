@@ -1,11 +1,10 @@
 package de.ait.platform.configuration;
 
-import de.ait.platform.user.TokenFilter;
+import de.ait.platform.security.service.TokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -36,6 +35,7 @@ public class SecurityConfiguration {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         x -> x
+                                .requestMatchers(HttpMethod.POST, "api/login", "api/refresh").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/articles").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/articles/{id}").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/articles").hasRole("ADMIN")

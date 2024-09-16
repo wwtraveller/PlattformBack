@@ -1,7 +1,6 @@
-package de.ait.platform.user;
+package de.ait.platform.security.service;
 
-import de.ait.platform.user.entity.AuthInfo;
-import de.ait.platform.user.service.TokenService;
+import de.ait.platform.security.entity.AuthInfo;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

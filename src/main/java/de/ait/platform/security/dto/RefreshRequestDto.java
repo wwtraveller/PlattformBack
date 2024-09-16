@@ -1,4 +1,4 @@
-package de.ait.platform.user.dto;
+package de.ait.platform.security.dto;
 
 import lombok.Getter;
 

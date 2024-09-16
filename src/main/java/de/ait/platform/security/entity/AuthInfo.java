@@ -1,13 +1,11 @@
-package de.ait.platform.user.entity;
+package de.ait.platform.security.entity;
 
 import de.ait.platform.role.entity.Role;
 import lombok.Getter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 

@@ -40,7 +40,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
         HashSet<Role> setRole = new HashSet<>();
         setRole.add(role);
         String encodedPassword = encoder.encode(dto.getPassword());
-        User newUser = repository.save(new User(null, dto.getUsername(), dto.getEmail(), encodedPassword, setRole));
+        User newUser = repository.save(new User(null, dto.getUsername(), encodedPassword, setRole));
         return mapper.map(newUser, UserResponseDto.class);
 
 

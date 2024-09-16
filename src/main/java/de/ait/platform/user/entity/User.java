@@ -16,6 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "t_user")
+
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,7 +68,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Comment> comments;
 
-    public User(Object o, String username, String email, String encodedPassword, HashSet<Role> setRole) {
+    public User(Object o, String username, String encodedPassword, HashSet<Role> setRole) {
 
     }
 

@@ -10,7 +10,6 @@ import de.ait.platform.user.entity.User;
 import de.ait.platform.user.exceptions.UserNotFound;
 import de.ait.platform.user.reposittory.UserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -98,7 +97,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with login " + username + " not found"));
     }

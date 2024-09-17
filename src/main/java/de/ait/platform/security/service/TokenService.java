@@ -26,8 +26,8 @@ import java.util.Set;
 public class TokenService {
     public static final int ACCESS_DAYS = 7;
     public static final int REFRESH_DAYS = 30;
-    private SecretKey accessKey;
-    private SecretKey refreshKey;
+    private final SecretKey accessKey;
+    private final SecretKey refreshKey;
     private final RoleRepository roleRepository;
 
     public TokenService(@Value("${key.access}") String refreshPhrase,
@@ -107,7 +107,7 @@ public class TokenService {
         List<LinkedHashMap<String,String>> rolesList = (List<LinkedHashMap<String,String>>)claims.get("roles");
         Set<Role> roles = new HashSet<>();
         for (LinkedHashMap<String,String> roleEntry : rolesList) {
-            String roleTitle = roleEntry.get("autority");
+            String roleTitle = roleEntry.get("authority");
             Role role = roleRepository.findRoleByTitle(roleTitle);
             if (role != null) {
                 roles.add(role);

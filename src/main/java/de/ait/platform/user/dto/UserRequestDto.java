@@ -17,6 +17,16 @@ public class UserRequestDto {
     private String password;
     private String photo;
 
+    public UserRequestDto(String username, String firstName, String lastName, String email, String password) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
 
-
+    public UserRequestDto(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }

@@ -46,10 +46,10 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST, "/api/categories").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/api/categories").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/categories/{id}").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/users").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/api/users").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/api/users").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/comments").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/comments/{id}").permitAll()
@@ -58,8 +58,6 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.DELETE, "/api/comments/{id}").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 ).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
-
-
         return http.build();
     }
 }

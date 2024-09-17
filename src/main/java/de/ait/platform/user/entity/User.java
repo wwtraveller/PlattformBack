@@ -63,6 +63,7 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
     private LocalDateTime dateCreated;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -72,6 +73,16 @@ public class User implements UserDetails {
 
     }
 
+    public User(Long id, String username, String firstName, String lastName, String email, String password, String photo, Set<Role> roles) {
+        this.id = id;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.photo = photo;
+        this.roles = roles;
+    }
 
     @PrePersist
     private void init() {

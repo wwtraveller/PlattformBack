@@ -58,8 +58,6 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.DELETE, "/api/comments/{id}").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 ).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
-
-
         return http.build();
     }
 }

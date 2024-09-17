@@ -32,7 +32,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
 
     @Override
-    public UserResponseDto createUser(UserLoginDto dto) {
+    public UserResponseDto createUser(UserRequestDto dto) {
         repository.findUserByUsername(dto.getUsername()).ifPresent(u -> {
             throw new RuntimeException("User " + u.getUsername() + " already exists");
         });
@@ -41,11 +41,11 @@ public class UserServiceImp implements UserService, UserDetailsService {
         HashSet<Role> setRole = new HashSet<>();
         setRole.add(role);
         String encodedPassword = encoder.encode(dto.getPassword());
-        User newUser = repository.save(new User(null, dto.getUsername(), encodedPassword, setRole));
+        User newUser = repository.save(new User(
+                null,dto.getUsername(),  dto.getFirstName(), dto.getLastName(), dto.getEmail(),encodedPassword,dto.getPhoto(), setRole ));
         return mapper.map(newUser, UserResponseDto.class);
 
     }
-
 
     @Override
     public UserResponseDto updateUser(Long id, UserRequestDto dto) {

@@ -16,6 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "t_user")
+
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,15 +63,26 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
     private LocalDateTime dateCreated;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Comment> comments;
 
-    public User(Object o, String username, String email, String encodedPassword, HashSet<Role> setRole) {
+    public User(Object o, String username, String encodedPassword, HashSet<Role> setRole) {
 
     }
 
+    public User(Long id, String username, String firstName, String lastName, String email, String password, String photo, Set<Role> roles) {
+        this.id = id;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.photo = photo;
+        this.roles = roles;
+    }
 
     @PrePersist
     private void init() {

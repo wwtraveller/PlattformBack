@@ -3,16 +3,15 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile  # Указание на Dockerfile для сборки приложения
     ports:
-      - "8080:8080"
+      - "8080:8080"  # Открываем порт 8080 для доступа к приложению
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_PROFILES_ACTIVE=prod  # Пример переменной окружения
     depends_on:
-      - postgres
-  # изменено имя зависимости на новое имя сервиса
+      - postgres  # Указываем, что приложение зависит от сервиса postgres
 
-  postgres:  # изменено имя сервиса
+  postgres:
     image: postgres:13.5
     restart: always
     environment:
@@ -30,4 +29,3 @@ services:
 
 volumes:
   postgres:
-

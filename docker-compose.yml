@@ -1,4 +1,3 @@
-# docker-compose.yml
 version: '3.8'
 services:
   postgres:
@@ -10,6 +9,7 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
-      - '5434:5432'
+      - "5434:5432"
+
 volumes:
   postgres:

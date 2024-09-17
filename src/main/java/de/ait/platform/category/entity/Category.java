@@ -32,4 +32,9 @@ public class Category {
             inverseJoinColumns = @JoinColumn(name="article_id")
     )
     private List<Article> articles = new ArrayList<>();
+
+    public List<Article> addArticle(Article article) {
+        articles.add(article);
+        return articles;
+    }
 }

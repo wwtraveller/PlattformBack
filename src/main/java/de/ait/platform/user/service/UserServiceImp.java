@@ -30,6 +30,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     private final BCryptPasswordEncoder encoder;
 
 
+
     @Override
     public UserResponseDto createUser(UserLoginDto dto) {
         repository.findUserByUsername(dto.getUsername()).ifPresent(u -> {
@@ -42,7 +43,6 @@ public class UserServiceImp implements UserService, UserDetailsService {
         String encodedPassword = encoder.encode(dto.getPassword());
         User newUser = repository.save(new User(null, dto.getUsername(), encodedPassword, setRole));
         return mapper.map(newUser, UserResponseDto.class);
-
 
     }
 

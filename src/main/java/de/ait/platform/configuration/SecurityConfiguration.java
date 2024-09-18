@@ -37,6 +37,7 @@ public class SecurityConfiguration {
                         x -> x
                                 .requestMatchers(HttpMethod.POST, "api/login", "api/refresh").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/articles").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/auth/me").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/articles/{id}").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/articles").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/api/articles").hasRole("ADMIN")

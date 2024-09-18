@@ -30,8 +30,8 @@ public class TokenService {
     private final SecretKey refreshKey;
     private final RoleRepository roleRepository;
 
-    public TokenService(@Value("${key.access}") String refreshPhrase,
-                        @Value("${key.refresh}") String accessPhrase,
+    public TokenService(@Value("${key.access}") String accessPhrase,
+                        @Value("${key.refresh}") String refreshPhrase,
                         @Autowired RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
         this.refreshKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(refreshPhrase));

@@ -1,6 +1,5 @@
 package de.ait.platform.security.service;
 
-import de.ait.platform.security.TokenNotFound;
 import de.ait.platform.security.entity.AuthInfo;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -9,11 +8,8 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;

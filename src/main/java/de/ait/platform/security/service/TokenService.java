@@ -5,12 +5,15 @@ import de.ait.platform.role.reposittory.RoleRepository;
 import de.ait.platform.security.entity.AuthInfo;
 import de.ait.platform.user.entity.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.crypto.SecretKey;
 import java.time.Instant;
@@ -21,7 +24,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
-
 @Service
 public class TokenService {
     public static final int ACCESS_DAYS = 7;
@@ -30,8 +32,9 @@ public class TokenService {
     private final SecretKey refreshKey;
     private final RoleRepository roleRepository;
 
-    public TokenService(@Value("${key.access}") String refreshPhrase,
-                        @Value("${key.refresh}") String accessPhrase,
+
+    public TokenService(@Value("${key.access}") String accessPhrase,
+                        @Value("${key.refresh}") String refreshPhrase,
                         @Autowired RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
         this.refreshKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(refreshPhrase));
@@ -43,8 +46,7 @@ public class TokenService {
         Instant experation = currentDate.plusDays(days)
                 .atZone(ZoneId.systemDefault())
                 .toInstant();
-        Date expirationDate = Date.from(experation);
-        return expirationDate;
+        return Date.from(experation);
     }
 
     public String generateAccessToken(User user) {
@@ -98,15 +100,16 @@ public class TokenService {
     public Claims getAccessClaims(String accessToken) {
         return getClaims(accessToken, accessKey);
     }
+
     public Claims getRefreshClaims(String refreshToken) {
         return getClaims(refreshToken, refreshKey);
     }
 
     public AuthInfo mapClaimsToAuthInfo(Claims claims) {
         String username = claims.getSubject();
-        List<LinkedHashMap<String,String>> rolesList = (List<LinkedHashMap<String,String>>)claims.get("roles");
+        List<LinkedHashMap<String, String>> rolesList = (List<LinkedHashMap<String, String>>) claims.get("roles");
         Set<Role> roles = new HashSet<>();
-        for (LinkedHashMap<String,String> roleEntry : rolesList) {
+        for (LinkedHashMap<String, String> roleEntry : rolesList) {
             String roleTitle = roleEntry.get("authority");
             Role role = roleRepository.findRoleByTitle(roleTitle);
             if (role != null) {
@@ -115,6 +118,27 @@ public class TokenService {
         }
         return new AuthInfo(username, roles);
     }
+    public ResponseEntity<AuthInfo> getAuthenticatedUser(@RequestHeader("Authorization") String token) {
+        // Verify the token
+        Jws<Claims> jws = Jwts.parser()
+                .setSigningKey("refresh key number 1")
+                .build()
+                .parseClaimsJws(token);
 
-
+        Claims claims = jws.getBody();
+        // Map claims to AuthInfo
+        AuthInfo authInfo = mapClaimsToAuthInfo(claims);
+        // Return the AuthInfo object
+        return ResponseEntity.ok(authInfo);
+    }
 }
+
+
+
+
+
+
+
+
+
+

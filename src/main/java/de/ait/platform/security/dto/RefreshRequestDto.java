@@ -1,7 +1,6 @@
 package de.ait.platform.security.dto;
 
 import lombok.Getter;
-
 import java.util.Objects;
 
 @Getter
@@ -12,7 +11,6 @@ public class RefreshRequestDto {
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RefreshRequestDto that)) return false;
-
         return Objects.equals(refreshToken, that.refreshToken);
     }
 
@@ -25,4 +23,5 @@ public class RefreshRequestDto {
     public String toString() {
         return "RefreshRequestDto " + refreshToken ;
     }
+
 }

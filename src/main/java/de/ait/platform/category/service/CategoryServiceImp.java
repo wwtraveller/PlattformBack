@@ -10,6 +10,7 @@ import de.ait.platform.category.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class CategoryServiceImp implements CategoryService {
                 .map(c-> mapper.map(c, CategoryResponse.class))
                 .toList();
     }
-
+    @Transactional
     @Override
     public CategoryResponse findById(Long id) {
         String message = "Couldn't find category with id:" + id;
@@ -36,7 +37,7 @@ public class CategoryServiceImp implements CategoryService {
                 .orElseThrow(() -> new CategoryNotFound(message));
         return mapper.map(foundCategory, CategoryResponse.class);
     }
-
+    @Transactional
     @Override
     public List<CategoryResponse> findByName(String name) {
         String message = "Couldn't find category with name:" + name;
@@ -51,7 +52,7 @@ public class CategoryServiceImp implements CategoryService {
         }
     }
 
-
+    @Transactional
     @Override
     public List<Article> addArticleToCategory(Long articleId, Long categoryId) {
         Optional<Category> category = repository.findById(categoryId);
@@ -67,7 +68,7 @@ public class CategoryServiceImp implements CategoryService {
         }
         return List.of();
     }
-
+    @Transactional
     @Override
     public CategoryResponse delete(Long id) {
         Optional<Category> category = repository.findById(id);
@@ -79,13 +80,14 @@ public class CategoryServiceImp implements CategoryService {
         }
         return mapper.map(category, CategoryResponse.class);
     }
+    @Transactional
     @Override
     public CategoryResponse save(CategoryRequest categoryDTO) {
         Category entity = mapper.map(categoryDTO, Category.class);
         Category newCategory = repository.save(entity);
         return mapper.map(newCategory, CategoryResponse.class);
     }
-
+    @Transactional
     @Override
     public CategoryResponse update(Long id, CategoryRequest categoryDTO) {
         Category entity = mapper.map(categoryDTO, Category.class);

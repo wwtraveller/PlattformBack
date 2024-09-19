@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -29,8 +30,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     private final RoleService roleService;
     private final BCryptPasswordEncoder encoder;
 
-
-
+    @Transactional
     @Override
     public UserResponseDto createUser(UserRequestDto dto) {
         repository.findUserByUsername(dto.getUsername()).ifPresent(u -> {
@@ -45,8 +45,10 @@ public class UserServiceImp implements UserService, UserDetailsService {
                 null,dto.getUsername(),  dto.getFirstName(), dto.getLastName(), dto.getEmail(),encodedPassword,dto.getPhoto(), setRole ));
         return mapper.map(newUser, UserResponseDto.class);
 
+
     }
 
+    @Transactional
     @Override
     public UserResponseDto updateUser(Long id, UserRequestDto dto) {
         User user = mapper.map(dto, User.class);
@@ -55,6 +57,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
         return mapper.map(entity, UserResponseDto.class);
     }
 
+    @Transactional
     @Override
     public UserResponseDto deleteUser(Long id) {
         Optional<User> user = repository.findById(id);
@@ -66,12 +69,14 @@ public class UserServiceImp implements UserService, UserDetailsService {
         return mapper.map(user, UserResponseDto.class);
     }
 
+    @Transactional
     @Override
     public List<UserResponseDto> getUsers() {
         List<User> users = repository.findAll();
         return users.stream().map(u -> mapper.map(u, UserResponseDto.class)).toList();
     }
 
+    @Transactional
     @Override
     public UserResponseDto getUserById(Long id) {
         Optional<User> user = repository.findById(id);
@@ -83,6 +88,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
         }
     }
 
+    @Transactional
     @Override
     public List<UserResponseDto> getUserByEmail(String email) {
         Predicate<User> predicateByEmail =
@@ -91,11 +97,13 @@ public class UserServiceImp implements UserService, UserDetailsService {
         return userList.stream().map(user -> mapper.map(user, UserResponseDto.class)).toList();
     }
 
+    @Transactional
     @Override
     public UserResponseDto setAdminRole(String email, boolean admin) {
         return null;
     }
 
+    @Transactional
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findUserByUsername(username)

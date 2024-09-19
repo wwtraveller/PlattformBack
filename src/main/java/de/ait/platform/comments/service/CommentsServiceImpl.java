@@ -41,7 +41,7 @@ public CommentsResponseDto getCommentById(Long id) {
 }
 
 
-
+@Transactional
 @Override
 public CommentsResponseDto save(CommentsRequestDto dto) {
     User user = userRepository.findById(dto.getUser_id())
@@ -58,7 +58,7 @@ public CommentsResponseDto save(CommentsRequestDto dto) {
             .getUser().getId(), newComment.getArticle().getId());
     return commentsResponseDto;
 }
-
+@Transactional
 @Override
 public CommentsResponseDto deleteComment(Long id) {
     Comment comment = commentsRepository

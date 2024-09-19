@@ -54,8 +54,7 @@ public class CommentController {
     })
     @PutMapping("/comments/{id}")
     public CommentsResponseDto updateComment(@PathVariable Long id, @RequestBody CommentsRequestDto commentDto) {
-        System.out.println(id);
-        return  commentsService.updateComment(id, commentDto);
+                return  commentsService.updateComment(id, commentDto);
     }
 
     @Operation(summary = "Delete a comment", description = "Delete a comment by its ID")

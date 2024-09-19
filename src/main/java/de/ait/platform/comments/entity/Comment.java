@@ -27,10 +27,4 @@ public class Comment {
     @JoinColumn(name = "article_id")
     private Article article;
 
-    public Comment(Long id, String text, User user, Article article) {
-        this.id = id;
-        this.text = text;
-        this.user = user;
-        this.article = article;
-    }
 }

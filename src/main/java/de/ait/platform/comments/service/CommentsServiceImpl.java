@@ -7,8 +7,6 @@ import de.ait.platform.comments.dto.CommentsResponseDto;
 import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.comments.exception.CommentNotFound;
 import de.ait.platform.comments.repository.CommentsRepository;
-import de.ait.platform.security.service.AuthService;
-import de.ait.platform.user.dto.UserResponseDto;
 import de.ait.platform.user.entity.User;
 import de.ait.platform.user.exceptions.UserNotFound;
 import de.ait.platform.user.reposittory.UserRepository;
@@ -27,58 +25,57 @@ public class CommentsServiceImpl implements CommentsService {
     private final ArticleRepository articleRepository;
     private final ModelMapper mapper;
 
-
     @Override
     public List<CommentsResponseDto> getAllComments() {
         List<Comment> comments = commentsRepository.findAll();
         return comments.stream().map(c->mapper.map(c, CommentsResponseDto.class)).toList();
     }
 
-@Transactional
-@Override
-public CommentsResponseDto getCommentById(Long id) {
-    Comment comment = commentsRepository
-            .findById(id)
-            .orElseThrow(() -> new CommentNotFound("Comment not found"));
-    return mapper.map(comment, CommentsResponseDto.class);
-}
+    @Transactional
+    @Override
+    public CommentsResponseDto getCommentById(Long id) {
+        Comment comment = commentsRepository
+                .findById(id)
+                .orElseThrow(() -> new CommentNotFound("Comment not found"));
+        return mapper.map(comment, CommentsResponseDto.class);
+    }
 
-@Transactional
-@Override
-public CommentsResponseDto save(CommentsRequestDto dto) {
-    User user = userRepository.findById(dto.getUser_id())
-          .orElseThrow(() -> new UserNotFound("Пользователь не найден с ID: " + dto.getUser_id()));
-    Article article = articleRepository.findById(dto.getArticle_id())
-            .orElseThrow(() -> new ArticleNotFound("Статья не найдена с ID: " + dto.getArticle_id()));
+    @Transactional
+    @Override
+    public CommentsResponseDto save(CommentsRequestDto dto) {
+        User user = userRepository.findById(dto.getUser_id())
+                .orElseThrow(() -> new UserNotFound("Пользователь не найден с ID: " + dto.getUser_id()));
+        Article article = articleRepository.findById(dto.getArticle_id())
+                .orElseThrow(() -> new ArticleNotFound("Статья не найдена с ID: " + dto.getArticle_id()));
         Comment newComment = new Comment();
-    newComment.setText(dto.getText());
-    newComment.setUser(user);
-    newComment.setArticle(article);
-    Comment savedComment = commentsRepository.save(newComment);
-    CommentsResponseDto commentsResponseDto = new CommentsResponseDto(savedComment.getId(),
-            newComment.getText(),newComment
-            .getUser().getId(), newComment.getArticle().getId());
-    return commentsResponseDto;
-}
+        newComment.setText(dto.getText());
+        newComment.setUser(user);
+        newComment.setArticle(article);
+        Comment savedComment = commentsRepository.save(newComment);
+        CommentsResponseDto commentsResponseDto = new CommentsResponseDto(savedComment.getId(),
+                newComment.getText(),newComment
+                .getUser().getId(), newComment.getArticle().getId());
+        return commentsResponseDto;
+    }
 
-@Transactional
-@Override
-public CommentsResponseDto deleteComment(Long id) {
-    Comment comment = commentsRepository
-            .findById(id)
-            .orElseThrow(() -> new CommentNotFound("Comment not found"));
-    commentsRepository.deleteById(id);
-    return mapper.map(comment, CommentsResponseDto.class);
-}
+    @Transactional
+    @Override
+    public CommentsResponseDto deleteComment(Long id) {
+        Comment comment = commentsRepository
+                .findById(id)
+                .orElseThrow(() -> new CommentNotFound("Comment not found"));
+        commentsRepository.deleteById(id);
+        return mapper.map(comment, CommentsResponseDto.class);
+    }
 
 
-@Transactional
-@Override
-public CommentsResponseDto updateComment(Long id, CommentsRequestDto dto) {
-    Comment comment = commentsRepository.findById(id)
-            .orElseThrow(() -> new CommentNotFound("Comment not found"));
-    comment.setText(dto.getText());
-    Comment updatedComment = commentsRepository.save(comment);
-    return mapper.map(updatedComment, CommentsResponseDto.class);
+    @Transactional
+    @Override
+    public CommentsResponseDto updateComment(Long id, CommentsRequestDto dto) {
+        Comment comment = commentsRepository.findById(id)
+                .orElseThrow(() -> new CommentNotFound("Comment not found"));
+        comment.setText(dto.getText());
+        Comment updatedComment = commentsRepository.save(comment);
+        return mapper.map(updatedComment, CommentsResponseDto.class);
     }
 }

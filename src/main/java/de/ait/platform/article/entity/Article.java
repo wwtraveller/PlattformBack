@@ -1,5 +1,7 @@
 package de.ait.platform.article.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import de.ait.platform.category.entity.Category;
 import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.user.entity.User;
@@ -41,6 +43,7 @@ public class Article {
     private Set<Category> categories;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Comment> comments;
 
     @ManyToOne

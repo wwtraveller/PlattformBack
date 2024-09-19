@@ -31,7 +31,7 @@ public class CommentsServiceImpl implements CommentsService {
         return comments.stream().map(c->mapper.map(c, CommentsResponseDto.class)).toList();
     }
 
-
+@Transactional
 @Override
 public CommentsResponseDto getCommentById(Long id) {
     Comment comment = commentsRepository
@@ -40,8 +40,7 @@ public CommentsResponseDto getCommentById(Long id) {
     return mapper.map(comment, CommentsResponseDto.class);
 }
 
-
-
+@Transactional
 @Override
 public CommentsResponseDto save(CommentsRequestDto dto) {
     User user = userRepository.findById(dto.getUser_id())
@@ -59,6 +58,7 @@ public CommentsResponseDto save(CommentsRequestDto dto) {
     return commentsResponseDto;
 }
 
+@Transactional
 @Override
 public CommentsResponseDto deleteComment(Long id) {
     Comment comment = commentsRepository

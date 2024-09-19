@@ -8,6 +8,7 @@ import de.ait.platform.article.repository.ArticleRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,7 @@ public class ArticleServiceImp implements ArticleService {
     private final ArticleRepository repository;
     private final ModelMapper mapper;
 
-
+    @Transactional
     @Override
     public List<ResponseArticle> fingAll() {
         List<Article> list = repository.findAll();
@@ -28,6 +29,7 @@ public class ArticleServiceImp implements ArticleService {
                 .toList();
     }
 
+    @Transactional
     @Override
     public ResponseArticle fingById(Long id) {
         Optional<Article> article = repository.findById(id);
@@ -40,6 +42,7 @@ public class ArticleServiceImp implements ArticleService {
         }
     }
 
+    @Transactional
     @Override
     public List<ResponseArticle> fingByTitle(String title) {
         Predicate<Article> predicateByTitle =
@@ -48,6 +51,7 @@ public class ArticleServiceImp implements ArticleService {
         return articleList.stream().map(article -> mapper.map(article, ResponseArticle.class)).toList();
     }
 
+    @Transactional
     @Override
     public ResponseArticle createArticle(RequestArticle dto) {
         Article entity = mapper.map(dto, Article.class);
@@ -55,6 +59,7 @@ public class ArticleServiceImp implements ArticleService {
         return mapper.map(entity, ResponseArticle.class);
     }
 
+    @Transactional
     @Override
     public ResponseArticle updateArticle(Long id, RequestArticle dto) {
         Article article = mapper.map(dto, Article.class);
@@ -63,6 +68,7 @@ public class ArticleServiceImp implements ArticleService {
         return mapper.map(entity, ResponseArticle.class);
     }
 
+    @Transactional
     @Override
     public ResponseArticle deleteArticle(Long id) {
         Optional<Article> foundedArticle = repository.findById(id);

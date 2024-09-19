@@ -15,11 +15,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class CategoryController {
     private final CategoryService service;
-//
-//    @GetMapping("/categories")
-//    private List<CategoryResponse> getCategories() {
-//        return service.findAll();
-//    }
+
     @GetMapping("/categories/{id}")
     public CategoryResponse getCategoryById(@PathVariable(name="id") Long id) {
         return service.findById(id);

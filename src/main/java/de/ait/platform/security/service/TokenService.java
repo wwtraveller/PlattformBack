@@ -4,13 +4,14 @@ import de.ait.platform.role.entity.Role;
 import de.ait.platform.role.reposittory.RoleRepository;
 import de.ait.platform.security.entity.AuthInfo;
 import de.ait.platform.user.entity.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.crypto.SecretKey;
 import java.time.Instant;
@@ -30,8 +31,8 @@ public class TokenService {
     private final SecretKey refreshKey;
     private final RoleRepository roleRepository;
 
-    public TokenService(@Value("${key.access}") String refreshPhrase,
-                        @Value("${key.refresh}") String accessPhrase,
+    public TokenService(@Value("${key.access}") String  accessPhrase,
+                        @Value("${key.refresh}") String refreshPhrase,
                         @Autowired RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
         this.refreshKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(refreshPhrase));
@@ -43,8 +44,7 @@ public class TokenService {
         Instant experation = currentDate.plusDays(days)
                 .atZone(ZoneId.systemDefault())
                 .toInstant();
-        Date expirationDate = Date.from(experation);
-        return expirationDate;
+        return Date.from(experation);
     }
 
     public String generateAccessToken(User user) {

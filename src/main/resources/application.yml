@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        auto_quote_keyword: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 8080
+
+key:
+  access: ${ACCESS_KEY}
+  refresh: ${REFRESH_KEY}

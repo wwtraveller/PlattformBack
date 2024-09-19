@@ -42,5 +42,4 @@ public class Comment {
         this.user = user;
         this.article = article;
     }
-
 }

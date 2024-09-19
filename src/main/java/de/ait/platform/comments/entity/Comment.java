@@ -27,13 +27,8 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonProperty("user")
-    public String getUserUsername() {
-        return user.getUsername();
-    }
     @ManyToOne
     @JoinColumn(name = "article_id")
-    @JsonBackReference
     private Article article;
 
     public Comment(Long id, String text, User user, Article article) {
@@ -42,5 +37,4 @@ public class Comment {
         this.user = user;
         this.article = article;
     }
-
 }

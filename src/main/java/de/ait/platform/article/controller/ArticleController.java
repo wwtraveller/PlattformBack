@@ -14,14 +14,14 @@ import java.util.List;
 @RequestMapping("/api")
 public class ArticleController {
     private final ArticleService service;
-
-    @GetMapping("/articles")
-    private List<ResponseArticle> getArticles() {
-        return service.fingAll();
-    }
+//
+//    @GetMapping("/articles")
+//    private List<ResponseArticle> getArticles() {
+//        return service.fingAll();
+//    }
 
     @GetMapping("/articles/{id}")
-    private ResponseArticle findById(Long id) {
+    private ResponseArticle findById(@PathVariable Long id) {
         return service.fingById(id);
     }
 
@@ -38,5 +38,14 @@ public class ArticleController {
     @DeleteMapping("/articles/{id}")
     public ResponseArticle deleteArticle(@PathVariable Long id) {
         return service.deleteArticle(id);
+    }
+
+    @GetMapping("/articles")
+    public List<ResponseArticle> getArticle(@RequestParam(name="title", required = false, defaultValue = "") String title){
+        if (title.isEmpty()) {
+            return service.fingAll();
+        } else {
+            return service.fingByTitle(title);
+        }
     }
 }

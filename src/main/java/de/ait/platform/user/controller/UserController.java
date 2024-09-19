@@ -2,9 +2,10 @@ package de.ait.platform.user.controller;
 
 
 
+import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.user.dto.UserRequestDto;
 import de.ait.platform.user.dto.UserResponseDto;
-import de.ait.platform.service.UserService;
+import de.ait.platform.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("users/{id}")
-    public UserResponseDto getUserById(@PathVariable(name = "id") long id) {
+    public UserResponseDto getUserById(@PathVariable(name = "id") Long id) {
         return service.getUserById(id);
     }
 

@@ -1,24 +1,32 @@
 package de.ait.platform.user.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class UserRequestDto {
+    private String username;
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
     private String photo;
 
-    public UserRequestDto(String firstName, String lastName, String email) {
+    public UserRequestDto(String username, String firstName, String lastName, String email, String password) {
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.photo = "https://img.favpng.com/20/8/6/computer-icons-business-facebook-bank-symbol-png-favpng-5S9wcfPXkrmFfNr5x9ASw1BH9.jpg";
+        this.password = password;
+    }
 
+    public UserRequestDto(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 }

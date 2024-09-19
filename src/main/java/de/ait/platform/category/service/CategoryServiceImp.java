@@ -1,5 +1,7 @@
 package de.ait.platform.category.service;
 
+import de.ait.platform.article.entity.Article;
+import de.ait.platform.article.repository.ArticleRepository;
 import de.ait.platform.category.dto.CategoryRequest;
 import de.ait.platform.category.dto.CategoryResponse;
 import de.ait.platform.category.entity.Category;
@@ -8,6 +10,7 @@ import de.ait.platform.category.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +20,8 @@ import java.util.Optional;
 public class CategoryServiceImp implements CategoryService {
     private final ModelMapper mapper;
     private final CategoryRepository repository;
+
+    private final ArticleRepository articleRepository;
     @Override
     public List<CategoryResponse> findAll() {
         List<Category> categories = repository.findAll();
@@ -24,7 +29,7 @@ public class CategoryServiceImp implements CategoryService {
                 .map(c-> mapper.map(c, CategoryResponse.class))
                 .toList();
     }
-
+    @Transactional
     @Override
     public CategoryResponse findById(Long id) {
         String message = "Couldn't find category with id:" + id;
@@ -32,7 +37,7 @@ public class CategoryServiceImp implements CategoryService {
                 .orElseThrow(() -> new CategoryNotFound(message));
         return mapper.map(foundCategory, CategoryResponse.class);
     }
-
+    @Transactional
     @Override
     public List<CategoryResponse> findByName(String name) {
         String message = "Couldn't find category with name:" + name;
@@ -47,8 +52,23 @@ public class CategoryServiceImp implements CategoryService {
         }
     }
 
-
-
+    @Transactional
+    @Override
+    public List<Article> addArticleToCategory(Long articleId, Long categoryId) {
+        Optional<Category> category = repository.findById(categoryId);
+        Optional<Article> article = articleRepository.findById(articleId);
+        if (category.isPresent()) {
+            if (article.isPresent()) {
+                category.get().addArticle(article.get());
+                return category.get().getArticles();
+            }
+        }
+        else {
+            throw new CategoryNotFound("Category with id:" + categoryId + " not found");
+        }
+        return List.of();
+    }
+    @Transactional
     @Override
     public CategoryResponse delete(Long id) {
         Optional<Category> category = repository.findById(id);
@@ -60,13 +80,14 @@ public class CategoryServiceImp implements CategoryService {
         }
         return mapper.map(category, CategoryResponse.class);
     }
+    @Transactional
     @Override
     public CategoryResponse save(CategoryRequest categoryDTO) {
         Category entity = mapper.map(categoryDTO, Category.class);
         Category newCategory = repository.save(entity);
         return mapper.map(newCategory, CategoryResponse.class);
     }
-
+    @Transactional
     @Override
     public CategoryResponse update(Long id, CategoryRequest categoryDTO) {
         Category entity = mapper.map(categoryDTO, Category.class);

@@ -59,8 +59,7 @@ public class CategoryServiceImp implements CategoryService {
         Optional<Article> article = articleRepository.findById(articleId);
         if (category.isPresent()) {
             if (article.isPresent()) {
-                category.get().addArticle(article.get());
-                return category.get().getArticles();
+                return category.get().addArticle(mapper.map(article, Article.class));
             }
         }
         else {

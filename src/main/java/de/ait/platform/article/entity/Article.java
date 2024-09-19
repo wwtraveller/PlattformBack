@@ -34,16 +34,18 @@ public class Article {
 
     @Column(name = "photo")
     private String photo;
+
     @ManyToMany
     @JoinTable(
             name = "categories_articles",
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
+    @JsonManagedReference
     private Set<Category> categories;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
-    @JsonIgnore
+    //@JsonIgnore
     private Set<Comment> comments;
 
     @ManyToOne

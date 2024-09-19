@@ -13,6 +13,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -35,6 +37,7 @@ public class SecurityConfiguration {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         x -> x
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "api/login", "api/refresh").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/articles").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/auth/me").permitAll()
@@ -60,5 +63,18 @@ public class SecurityConfiguration {
                                 .anyRequest().authenticated()
                 ).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+    @Bean
+    public WebMvcConfigurer webMvcConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:8080") // Ваш Swagger UI URL
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
+            }
+        };
     }
 }

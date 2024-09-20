@@ -2,18 +2,27 @@ spring:
   application:
     name: platform
   datasource:
-    url: jdbc:postgresql://localhost:5432/PLATFORM
+    url: jdbc:postgresql://localhost:5432/platform
     username: postgres
     password: qwerty007
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         auto_quote_keyword: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        query:
+          plan:
+            cache:
+              max_size: 100
+          cache:
+            region:
+              factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+            use_second_level_cache: true
+            use_query_cache: true
 
 key:
   access: Qiv2P1iotfT2jbZ/BoxzqmeoQ0jZSpFRoNbtl8fdA7U=

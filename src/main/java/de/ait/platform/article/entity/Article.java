@@ -41,7 +41,7 @@ public class Article {
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    @JsonManagedReference
+//    @JsonManagedReference
     private Set<Category> categories;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)

@@ -1,35 +1,23 @@
 package de.ait.platform.user.entity;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.role.entity.Role;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-
 
 @NoArgsConstructor
 @Getter
@@ -43,7 +31,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "user_name")
+    @Column(name = "username")
     private String username;
     @Column(name = "first_name")
     private String firstName;
@@ -71,7 +59,6 @@ public class User implements UserDetails {
     private Set<Comment> comments;
 
     public User(Object o, String username, String encodedPassword, HashSet<Role> setRole) {
-
     }
 
     public User(Long id, String username, String firstName, String lastName, String email, String password, String photo, Set<Role> roles) {
@@ -85,9 +72,9 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    @PrePersist
+    //@PrePersist
     private void init() {
-        dateCreated = LocalDateTime.now();
+        dateCreated = ZonedDateTime.now(ZoneId.of("UTC")).toLocalDateTime(); // or any other timezone
     }
 
     @Override

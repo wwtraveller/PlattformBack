@@ -1,5 +1,7 @@
 package de.ait.platform.category.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.ait.platform.article.entity.Article;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,6 +33,7 @@ public class Category {
             joinColumns = @JoinColumn(name="category_id"),
             inverseJoinColumns = @JoinColumn(name="article_id")
     )
+    @JsonBackReference
     private List<Article> articles = new ArrayList<>();
 
     public List<Article> addArticle(Article article) {

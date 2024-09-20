@@ -13,6 +13,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -35,30 +37,45 @@ public class SecurityConfiguration {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         x -> x
+                                //.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "api/login", "api/refresh").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/articles").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/auth/me").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/articles/{id}").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/auth/me").hasAnyRole("ADMIN","USER")
+                                .requestMatchers(HttpMethod.GET, "/api/articles/{id}").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.POST, "/api/articles").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/api/articles").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/articles/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/articles/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/categories/{id}").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/categories").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/api/categories").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/categories/{categoryId}/articles/{articleId}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/categories/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/categories/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/users/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                                .requestMatchers(HttpMethod.PUT, "/api/users").permitAll()
-                                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/users").hasAnyRole("ADMIN","USER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.GET, "/api/comments").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/comments/{id}").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/comments").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/api/comments").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/api/comments/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/comments").hasAnyRole("ADMIN","USER")
+                                .requestMatchers(HttpMethod.PUT, "/api/comments").hasAnyRole("ADMIN","USER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/comments/{id}").hasAnyRole("ADMIN","USER")
                                 .anyRequest().authenticated()
                 ).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+//    @Bean
+//    public WebMvcConfigurer webMvcConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedOrigins("http://localhost:8080") // Ваш Swagger UI URL
+//                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+//                        .allowedHeaders("*")
+//                        .allowCredentials(true);
+//            }
+//        };
+//    }
 }

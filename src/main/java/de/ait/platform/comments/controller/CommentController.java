@@ -13,6 +13,7 @@ public class CommentController {
 
     private final CommentsService commentsService;
 
+
     @GetMapping("/comments")
     public List<CommentsResponseDto> getAllComments() {
         return commentsService.getAllComments();
@@ -23,18 +24,16 @@ public class CommentController {
     return commentsService.getCommentById(id);
     }
 
+
     @PostMapping("/comments")
     public CommentsResponseDto createComment(@RequestBody CommentsRequestDto commentDto) {
         return  commentsService.save(commentDto);
     }
 
-
     @PutMapping("/comments/{id}")
     public CommentsResponseDto updateComment(@PathVariable Long id, @RequestBody CommentsRequestDto commentDto) {
-        System.out.println(id);
-        return  commentsService.updateComment(id, commentDto);
+                return  commentsService.updateComment(id, commentDto);
     }
-
 
     @DeleteMapping("/comments/{id}")
     public CommentsResponseDto deleteComment(@PathVariable Long id) {

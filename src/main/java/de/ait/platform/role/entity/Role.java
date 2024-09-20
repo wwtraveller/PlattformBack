@@ -1,5 +1,6 @@
 package de.ait.platform.role.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +21,7 @@ import java.util.Objects;
 @Setter
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "t_role")
 public class Role implements GrantedAuthority {
     @Id

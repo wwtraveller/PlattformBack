@@ -14,6 +14,7 @@ spring:
   mvc:
     converters:
       preferred-json-mapper: jackson
+
 server:
   port: 8080
 

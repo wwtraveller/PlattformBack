@@ -2,6 +2,7 @@ package de.ait.platform.article.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.ait.platform.category.entity.Category;
 import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.user.entity.User;
@@ -51,4 +52,8 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @JsonProperty("user")
+    public String getUserUsername() {
+        return user.getUsername();
+    }
 }

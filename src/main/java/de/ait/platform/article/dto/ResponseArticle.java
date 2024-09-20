@@ -19,5 +19,5 @@ public class ResponseArticle {
     private String content;
     private String photo;
     private Set<Comment> comments;
-    private User user_id;
+    private String user_id;
 }

@@ -11,6 +11,9 @@ spring:
       hibernate:
         auto_quote_keyword: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  mvc:
+    converters:
+      preferred-json-mapper: jackson
 server:
   port: 8080
 

@@ -5,20 +5,29 @@ import de.ait.platform.article.dto.RequestArticle;
 import de.ait.platform.article.entity.Article;
 import de.ait.platform.article.exception.ArticleNotFound;
 import de.ait.platform.article.repository.ArticleRepository;
+import de.ait.platform.comments.entity.Comment;
+import de.ait.platform.security.service.AuthService;
+import de.ait.platform.user.dto.UserResponseDto;
+import de.ait.platform.user.entity.User;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
+
 
 @AllArgsConstructor
 @Service
 public class ArticleServiceImp implements ArticleService {
     private final ArticleRepository repository;
     private final ModelMapper mapper;
+    private final AuthService service;
+
 
     @Transactional
     @Override
@@ -55,8 +64,12 @@ public class ArticleServiceImp implements ArticleService {
     @Override
     public ResponseArticle createArticle(RequestArticle dto) {
         Article entity = mapper.map(dto, Article.class);
+        UserResponseDto userDto = service.getAuthenticatedUser();
+        User user = mapper.map(userDto, User.class);
+        entity.setUser(user);
         repository.save(entity);
-        return mapper.map(entity, ResponseArticle.class);
+        return new ResponseArticle(entity.getId(),entity.getTitle(),entity.getContent(),
+                entity.getPhoto(),entity.getComments(),entity.getUser().getUsername());
     }
 
     @Transactional
@@ -72,6 +85,15 @@ public class ArticleServiceImp implements ArticleService {
     @Override
     public ResponseArticle deleteArticle(Long id) {
         Optional<Article> foundedArticle = repository.findById(id);
+        if (foundedArticle.isPresent()) {
+
+            Set<Comment> comments = foundedArticle.get().getComments();
+            for (Comment comment : comments) {
+                comment.setArticle(null);
+                comment.setUser(null);
+            }
+            foundedArticle.get().setComments(new HashSet<>());
+        }
         repository.deleteById(id);
         return mapper.map(foundedArticle, ResponseArticle.class);
     }

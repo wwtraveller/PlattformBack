@@ -41,11 +41,11 @@ public class Article {
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
+//    @JsonManagedReference
     private Set<Category> categories;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
-
-
+    //@JsonIgnore
     private Set<Comment> comments;
 
     @ManyToOne

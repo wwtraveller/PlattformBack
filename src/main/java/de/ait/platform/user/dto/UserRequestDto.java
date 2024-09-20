@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -23,6 +23,15 @@ public class UserRequestDto {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+    }
+
+    public UserRequestDto(String username, String firstName, String lastName, String email, String password, String photo) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.photo = "";
     }
 
     public UserRequestDto(String username, String password) {

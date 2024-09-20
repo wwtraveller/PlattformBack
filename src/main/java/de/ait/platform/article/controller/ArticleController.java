@@ -5,6 +5,7 @@ import de.ait.platform.article.dto.ResponseArticle;
 import de.ait.platform.article.entity.Article;
 import de.ait.platform.article.service.ArticleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

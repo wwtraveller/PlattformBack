@@ -51,7 +51,7 @@ public class ArticleServiceImp implements ArticleService {
         return articleList.stream().map(article -> mapper.map(article, ResponseArticle.class)).toList();
     }
 
-    @Transactional
+
     @Override
     public ResponseArticle createArticle(RequestArticle dto) {
         Article entity = mapper.map(dto, Article.class);

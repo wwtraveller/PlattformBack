@@ -26,6 +26,11 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
     })
 
+//    @GetMapping("check-username")
+//    public boolean checkUsername(@RequestParam UserRequestDto dto) {
+//
+//    }
+
 
 
     @PostMapping("/users")

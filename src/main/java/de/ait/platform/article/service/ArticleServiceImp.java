@@ -75,10 +75,24 @@ public class ArticleServiceImp implements ArticleService {
     @Transactional
     @Override
     public ResponseArticle updateArticle(Long id, RequestArticle dto) {
-        Article article = mapper.map(dto, Article.class);
-        article.setId(id);
-        Article entity = repository.save(article);
-        return mapper.map(entity, ResponseArticle.class);
+        Article existingArticle = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Article not found with id: " + id));
+        if (dto.getTitle() != null && !dto.getTitle().isEmpty()) {
+            existingArticle.setTitle(dto.getTitle());
+        }
+        if (dto.getContent() != null && !dto.getContent().isEmpty()) {
+            existingArticle.setContent(dto.getContent());
+        }
+        if (dto.getComments() != null && !dto.getComments().isEmpty()) {
+            existingArticle.setComments(dto.getComments());
+        }
+        if (dto.getPhoto() != null && !dto.getPhoto().isEmpty()) {
+            existingArticle.setPhoto(dto.getPhoto());
+        }
+
+        Article updatedArticle = repository.save(existingArticle);
+
+        return mapper.map(updatedArticle, ResponseArticle.class);
     }
 
     @Transactional

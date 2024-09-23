@@ -38,11 +38,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         x -> x
                                 //.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "api/login", "api/refresh").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/articles").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/auth/me").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/articles/{id}").hasAnyRole("ADMIN","USER")
-                                .requestMatchers(HttpMethod.POST, "/api/articles").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/articles").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.PUT, "/api/articles/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/articles/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
@@ -51,7 +51,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.PUT, "/categories/{categoryId}/articles/{articleId}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/api/categories/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/categories/{id}").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/api/users").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.GET, "/api/users/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}").hasAnyRole("ADMIN","USER")

@@ -5,6 +5,10 @@ import de.ait.platform.article.dto.RequestArticle;
 import de.ait.platform.article.entity.Article;
 import de.ait.platform.article.exception.ArticleNotFound;
 import de.ait.platform.article.repository.ArticleRepository;
+import de.ait.platform.category.dto.CategoryResponse;
+import de.ait.platform.category.entity.Category;
+import de.ait.platform.category.service.CategoryService;
+import de.ait.platform.category.service.CategoryServiceImp;
 import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.security.service.AuthService;
 import de.ait.platform.user.dto.UserResponseDto;
@@ -25,6 +29,7 @@ import java.util.function.Predicate;
 @Service
 public class ArticleServiceImp implements ArticleService {
     private final ArticleRepository repository;
+    private final CategoryServiceImp categoryService;
     private final ModelMapper mapper;
     private final AuthService service;
 
@@ -65,11 +70,21 @@ public class ArticleServiceImp implements ArticleService {
     public ResponseArticle createArticle(RequestArticle dto) {
         Article entity = mapper.map(dto, Article.class);
         UserResponseDto userDto = service.getAuthenticatedUser();
+        Set<Category> categories = new HashSet<>();
+        if (dto.getCategories() != null) {
+            for (Number number: dto.getCategories()){
+                CategoryResponse categoryResponse = categoryService.findById(number.longValue());
+                Category category = mapper.map(categoryResponse, Category.class);
+                categories.add(category);
+            }
+        }
+
         User user = mapper.map(userDto, User.class);
+        entity.setCategories(categories);
         entity.setUser(user);
         repository.save(entity);
         return new ResponseArticle(entity.getId(),entity.getTitle(),entity.getContent(),
-                entity.getPhoto(),entity.getComments(),entity.getUser().getUsername());
+                entity.getPhoto(),entity.getUser().getUsername(),entity.getComments(), entity.getCategories());
     }
 
     @Transactional

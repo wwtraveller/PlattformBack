@@ -2,7 +2,7 @@ spring:
   application:
     name: platform
   datasource:
-    url: jdbc:postgresql://localhost:5434/platform
+    url: jdbc:postgresql://localhost:5432/PLATFORM
     username: postgres
     password: Rost2010
     driver-class-name: org.postgresql.Driver

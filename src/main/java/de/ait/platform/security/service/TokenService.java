@@ -25,7 +25,7 @@ import java.util.Set;
 
 @Service
 public class TokenService {
-    public static final int ACCESS_DAYS = 7;
+    public static final int ACCESS_DAYS = 20;
     public static final int REFRESH_DAYS = 30;
     private final SecretKey accessKey;
     private final SecretKey refreshKey;

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 @Service
@@ -41,8 +42,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
         HashSet<Role> setRole = new HashSet<>();
         setRole.add(role);
         String encodedPassword = encoder.encode(dto.getPassword());
-        User newUser = repository.save(new User(
-                null,dto.getUsername(),  dto.getFirstName(), dto.getLastName(), dto.getEmail(),encodedPassword,dto.getPhoto(), setRole ));
+        User newUser = repository.save(new User(null, dto.getUsername(), dto.getFirstName(), dto.getLastName(), dto.getEmail(), encodedPassword, dto.getPhoto(), setRole));
         return mapper.map(newUser, UserResponseDto.class);
 
 
@@ -51,10 +51,43 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Transactional
     @Override
     public UserResponseDto updateUser(Long id, UserRequestDto dto) {
-        User user = mapper.map(dto, User.class);
-        user.setId(id);
-        User entity = repository.save(user);
-        return mapper.map(entity, UserResponseDto.class);
+        // Retrieve user by ID
+        User existingUser = repository.findById(id)
+                .orElseThrow(() -> new UserNotFound("User not found with id: " + id));
+
+        // Update user properties if present
+        if (dto.getEmail() != null && !dto.getEmail().isEmpty()) {
+            existingUser.setEmail(dto.getEmail());
+        }
+        if (dto.getUsername() != null && !dto.getUsername().isEmpty()) {
+            existingUser.setUsername(dto.getUsername());
+        }
+        if (dto.getFirstName() != null && !dto.getFirstName().isEmpty()) {
+            existingUser.setFirstName(dto.getFirstName());
+        }
+        if (dto.getLastName() != null && !dto.getLastName().isEmpty()) {
+            existingUser.setLastName(dto.getLastName());
+        }
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            String encodedPassword = encoder.encode(dto.getPassword());
+            existingUser.setPassword(encodedPassword);
+        }
+        if (dto.getRoles() != null && !dto.getRoles().isEmpty()) {
+            Set<Role> roles = new HashSet<>();
+            for (Role roleName : dto.getRoles()) {
+                Role role = roleService.getRoleByTitle(roleName.getTitle());
+                if (role != null) {
+                    roles.add(role);
+                } else {
+                    throw new IllegalArgumentException("Role not found: " + roleName);
+                }
+            }
+            existingUser.setRoles(roles);
+        }
+
+        // Save updated user and return response
+        User updatedUser = repository.save(existingUser);
+        return mapper.map(updatedUser, UserResponseDto.class);
     }
 
     @Transactional
@@ -91,8 +124,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Transactional
     @Override
     public List<UserResponseDto> getUserByEmail(String email) {
-        Predicate<User> predicateByEmail =
-                (email.equals("")) ? u -> true : user -> user.getEmail().equalsIgnoreCase(email);
+        Predicate<User> predicateByEmail = (email.equals("")) ? u -> true : user -> user.getEmail().equalsIgnoreCase(email);
         List<User> userList = repository.findAll().stream().filter(predicateByEmail).toList();
         return userList.stream().map(user -> mapper.map(user, UserResponseDto.class)).toList();
     }
@@ -106,7 +138,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Transactional
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User with login " + username + " not found"));
+        return repository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with login " + username + " not found"));
     }
 }
+

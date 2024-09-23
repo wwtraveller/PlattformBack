@@ -27,5 +27,5 @@ public class RequestArticle {
     @Nullable
     private User user;
     @Nullable
-    private Set<Number> categories;
+    private Set<Long> categories;
 }

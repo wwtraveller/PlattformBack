@@ -72,13 +72,12 @@ public class ArticleServiceImp implements ArticleService {
         UserResponseDto userDto = service.getAuthenticatedUser();
         Set<Category> categories = new HashSet<>();
         if (dto.getCategories() != null) {
-            for (Number number: dto.getCategories()){
-                CategoryResponse categoryResponse = categoryService.findById(number.longValue());
+            for (Long number: dto.getCategories()){
+                CategoryResponse categoryResponse = categoryService.findById(number);
                 Category category = mapper.map(categoryResponse, Category.class);
                 categories.add(category);
             }
         }
-
         User user = mapper.map(userDto, User.class);
         entity.setCategories(categories);
         entity.setUser(user);

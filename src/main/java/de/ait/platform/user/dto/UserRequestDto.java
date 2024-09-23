@@ -1,8 +1,12 @@
 package de.ait.platform.user.dto;
 
+import de.ait.platform.role.entity.Role;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
 
 
 @NoArgsConstructor
@@ -15,13 +19,15 @@ public class UserRequestDto {
     private String email;
     private String password;
     private String photo;
+    private Set<Role> roles;
 
-    public UserRequestDto(String username, String firstName, String lastName, String email, String password) {
+    public UserRequestDto(String username, String firstName, String lastName, String email, String password, Set<Role> roles) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.roles = roles;
     }
 
     public UserRequestDto(String username, String firstName, String lastName, String email, String password, String photo) {

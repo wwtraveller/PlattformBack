@@ -27,6 +27,9 @@ public class AuthService {
     private final Map<String, String> refreshTokenStorage = new HashMap<>();
 
     public TokenResponseDto login(UserLoginDto inboundUser) throws AuthException {
+        if(inboundUser == null || inboundUser.getUsername() == null || inboundUser.getPassword() == null) {
+            throw new AuthException("Username or password cannot null");
+        }
         String username = inboundUser.getUsername();
         User foundUser = userService.loadUserByUsername(username);
 
@@ -52,7 +55,7 @@ public class AuthService {
             String accessToken = tokenService.generateAccessToken(founUser);
             return new TokenResponseDto(accessToken, null); //todo
         } else {
-            return new TokenResponseDto(null , null); // todo
+            return new TokenResponseDto(null , null); //todo
         }
     }
 

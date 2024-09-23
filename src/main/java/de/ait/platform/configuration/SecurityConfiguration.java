@@ -37,12 +37,14 @@ public class SecurityConfiguration {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         x -> x
-                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "api/login", "api/refresh").permitAll()
+                                //.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/check-username").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/check-email").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/articles").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/auth/me").hasAnyRole("ADMIN","USER")
+                                .requestMatchers(HttpMethod.GET, "/api/auth/me").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/articles/{id}").hasAnyRole("ADMIN","USER")
-                                .requestMatchers(HttpMethod.POST, "/api/articles").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/articles").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.PUT, "/api/articles/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/articles/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
@@ -51,29 +53,31 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.PUT, "/categories/{categoryId}/articles/{articleId}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/api/categories/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/categories/{id}").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/api/users").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.GET, "/api/users/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.GET, "/api/comments").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/comments/{id}").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/comments").hasAnyRole("ADMIN","USER")
-                                .requestMatchers(HttpMethod.PUT, "/api/comments").hasAnyRole("ADMIN","USER")
+                                .requestMatchers(HttpMethod.PUT, "/api/comments/{id}").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/comments/{id}").hasAnyRole("ADMIN","USER")
                                 .anyRequest().authenticated()
                 ).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-    @Bean
-    public WebMvcConfigurer webMvcConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:8080")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowCredentials(true);
-            }
-        };
-    }
+//    @Bean
+//    public WebMvcConfigurer webMvcConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedOrigins("http://localhost:8080") // Ваш Swagger UI URL
+//                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+//                        .allowedHeaders("*")
+//                        .allowCredentials(true);
+//            }
+//        };
+//    }
 }

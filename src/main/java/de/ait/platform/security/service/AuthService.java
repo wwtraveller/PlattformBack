@@ -4,9 +4,9 @@ import de.ait.platform.security.dto.TokenResponseDto;
 import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.user.dto.UserResponseDto;
 import de.ait.platform.user.entity.User;
+import de.ait.platform.security.exception.CustomAuthException;
 import de.ait.platform.user.service.UserService;
 import io.jsonwebtoken.Claims;
-import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
@@ -26,9 +26,9 @@ public class AuthService {
     private final ModelMapper mapper;
     private final Map<String, String> refreshTokenStorage = new HashMap<>();
 
-    public TokenResponseDto login(UserLoginDto inboundUser) throws AuthException {
+    public TokenResponseDto login(UserLoginDto inboundUser) throws CustomAuthException {
         if(inboundUser == null || inboundUser.getUsername() == null || inboundUser.getPassword() == null) {
-            throw new AuthException("Username or password cannot null");
+            throw new CustomAuthException("Password is not correct");
         }
         String username = inboundUser.getUsername();
         User foundUser = userService.loadUserByUsername(username);
@@ -42,7 +42,7 @@ public class AuthService {
 
 
        } else {
-           throw new AuthException("Password is not correct");
+           throw new CustomAuthException("Password is not correct");
        }
     }
 

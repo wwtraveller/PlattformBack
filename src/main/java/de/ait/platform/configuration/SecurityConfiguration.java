@@ -72,7 +72,6 @@ public class SecurityConfiguration {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:8080")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
                         .allowCredentials(true);
             }
         };

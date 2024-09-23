@@ -38,11 +38,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         x -> x
                                 //.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "api/login", "api/refresh").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/articles").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/auth/me").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.GET, "/api/articles/{id}").hasAnyRole("ADMIN","USER")
-                                .requestMatchers(HttpMethod.POST, "/api/articles").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/articles").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.PUT, "/api/articles/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/articles/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()

@@ -68,6 +68,9 @@ public class UserServiceImp implements UserService, UserDetailsService {
         if (dto.getLastName() != null && !dto.getLastName().isEmpty()) {
             existingUser.setLastName(dto.getLastName());
         }
+        if (dto.getPhoto() != null && !dto.getPhoto().isEmpty()) {
+            existingUser.setPhoto(dto.getPhoto());
+        }
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
             String encodedPassword = encoder.encode(dto.getPassword());
             existingUser.setPassword(encodedPassword);

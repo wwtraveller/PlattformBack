@@ -27,6 +27,9 @@ public class AuthService {
     private final Map<String, String> refreshTokenStorage = new HashMap<>();
 
     public TokenResponseDto login(UserLoginDto inboundUser) throws AuthException {
+        if(inboundUser == null || inboundUser.getUsername() == null || inboundUser.getPassword() == null) {
+            throw new AuthException("Username or password cannot null");
+        }
         String username = inboundUser.getUsername();
         User foundUser = userService.loadUserByUsername(username);
 

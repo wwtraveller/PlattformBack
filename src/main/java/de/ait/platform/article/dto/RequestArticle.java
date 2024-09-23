@@ -1,6 +1,7 @@
 package de.ait.platform.article.dto;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
+import de.ait.platform.category.entity.Category;
 import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.user.entity.User;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,6 @@ public class RequestArticle {
     private Set<Comment> comments;
     @Nullable
     private User user;
+    @Nullable
+    private Set<Number> categories;
 }

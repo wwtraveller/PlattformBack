@@ -115,6 +115,4 @@ public class TokenService {
         }
         return new AuthInfo(username, roles);
     }
-
-
 }

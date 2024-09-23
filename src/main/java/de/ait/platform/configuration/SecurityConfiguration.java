@@ -59,7 +59,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.GET, "/api/comments").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/comments/{id}").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/comments").hasAnyRole("ADMIN","USER")
-                                .requestMatchers(HttpMethod.PUT, "/api/comments/{id").hasAnyRole("ADMIN","USER")
+                                .requestMatchers(HttpMethod.PUT, "/api/comments/{id}").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/comments/{id}").hasAnyRole("ADMIN","USER")
                                 .anyRequest().authenticated()
                 ).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);

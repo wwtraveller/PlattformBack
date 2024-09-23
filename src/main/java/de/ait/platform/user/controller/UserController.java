@@ -80,7 +80,7 @@ public class UserController {
     }
 
     @GetMapping("/check-username")
-    public ResponseEntity<Boolean> checkUsername(@RequestParam String username) {
+    public ResponseEntity<Boolean> checkUsername(@RequestBody String username) {
         if (username == null || username.isEmpty()) {
             // Если username пустой, возвращаем статус 400 Bad Request
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
@@ -91,7 +91,7 @@ public class UserController {
     }
 
     @GetMapping("/check-email")
-    public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
+    public ResponseEntity<Boolean> checkEmail(@RequestBody String email) {
         if (email == null || email.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
         }

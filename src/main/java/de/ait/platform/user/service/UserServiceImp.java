@@ -148,12 +148,15 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Transactional
     @Override
     public boolean isUsernameAvailable(String username) {
+        System.out.println("Username: " + username);
         return !userRepository.existsByUsername(username);
     }
     @Transactional
     @Override
     public boolean isEmailAvailable(String email) {
+        System.out.println("Email: " + email);
         return !userRepository.existsByEmail(email);
+
     }
 }
 

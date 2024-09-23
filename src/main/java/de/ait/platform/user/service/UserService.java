@@ -15,9 +15,9 @@ public interface UserService{
     UserResponseDto getUserById(Long id);
     List<UserResponseDto> getUserByEmail(String email);
     UserResponseDto setAdminRole(String email, boolean admin);
-    public User loadUserByUsername(String username) throws UsernameNotFoundException;
-    public boolean isUsernameAvailable(String username);
-    public boolean isEmailAvailable(String email);
+    User loadUserByUsername(String username) throws UsernameNotFoundException;
+    boolean isUsernameAvailable(String username);
+    boolean isEmailAvailable(String email);
 
 
 }

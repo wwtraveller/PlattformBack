@@ -70,7 +70,7 @@ public class CategoryServiceImp implements CategoryService {
         } else {
             throw new CategoryNotFound("Category with id:" + categoryId + " not found");
         }
-        return List.of();
+        return List.of(mapper.map(article, Article.class));
     }
 
     @Transactional

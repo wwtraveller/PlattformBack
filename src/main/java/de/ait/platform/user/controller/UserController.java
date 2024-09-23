@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +27,6 @@ public class UserController {
                             schema = @Schema(implementation = UserResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
     })
-
 
 
     @PostMapping("/users")
@@ -77,7 +78,33 @@ public class UserController {
     public UserResponseDto deleteUser(@PathVariable Long id) {
         return service.deleteUser(id);
     }
+
+    @GetMapping("/check-username")
+    public ResponseEntity<Boolean> checkUsername(@RequestBody String username) {
+        if (username == null || username.isEmpty()) {
+            // Если username пустой, возвращаем статус 400 Bad Request
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+        }
+        boolean isAvailable = service.isUsernameAvailable(username);
+        return ResponseEntity.ok(isAvailable);
+
+    }
+
+    @GetMapping("/check-email")
+    public ResponseEntity<Boolean> checkEmail(@RequestBody String email) {
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+        }
+        boolean isAvailable = service.isEmailAvailable(email);
+        return ResponseEntity.ok(isAvailable);
+    }
 }
+
+
+
+
+
+
 
 
 

@@ -39,6 +39,8 @@ public class SecurityConfiguration {
                         x -> x
                                 //.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/check-username").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/check-email").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/articles").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/auth/me").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/articles/{id}").hasAnyRole("ADMIN","USER")

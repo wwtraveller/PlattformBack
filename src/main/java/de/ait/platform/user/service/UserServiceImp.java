@@ -30,6 +30,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     private final ModelMapper mapper;
     private final RoleService roleService;
     private final BCryptPasswordEncoder encoder;
+    private final UserRepository userRepository;
 
     @Transactional
     @Override
@@ -142,6 +143,17 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User with login " + username + " not found"));
+    }
+
+    @Transactional
+    @Override
+    public boolean isUsernameAvailable(String username) {
+        return !userRepository.existsByUsername(username);
+    }
+    @Transactional
+    @Override
+    public boolean isEmailAvailable(String email) {
+        return !userRepository.existsByEmail(email);
     }
 }
 

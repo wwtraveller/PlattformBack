@@ -30,7 +30,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     private final ModelMapper mapper;
     private final RoleService roleService;
     private final BCryptPasswordEncoder encoder;
-    private final UserRepository userRepository;
+
 
     @Transactional
     @Override
@@ -147,15 +147,15 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     @Transactional
     @Override
-    public boolean isUsernameAvailable(String username) {
+    public boolean isUsernameTaken(String username) {
         System.out.println("Username: " + username);
-        return !userRepository.existsByUsername(username);
+        return repository.existsByUsername(username);
     }
     @Transactional
     @Override
     public boolean isEmailAvailable(String email) {
         System.out.println("Email: " + email);
-        return !userRepository.existsByEmail(email);
+        return repository.existsByEmail(email);
 
     }
 }

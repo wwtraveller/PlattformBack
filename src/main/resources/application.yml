@@ -21,3 +21,4 @@ server:
 key:
   access: ${ACCESS_KEY}
   refresh: ${REFRESH_KEY}
+

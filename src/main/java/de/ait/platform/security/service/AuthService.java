@@ -1,6 +1,7 @@
 package de.ait.platform.security.service;
 
 import de.ait.platform.security.dto.TokenResponseDto;
+import de.ait.platform.security.exception.InvalidPasswordException;
 import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.user.dto.UserResponseDto;
 import de.ait.platform.user.entity.User;
@@ -8,6 +9,7 @@ import de.ait.platform.security.exception.CustomAuthException;
 import de.ait.platform.user.service.UserService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +21,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
     private final TokenService tokenService;
     private final UserService userService;
@@ -28,34 +31,36 @@ public class AuthService {
 
     public TokenResponseDto login(UserLoginDto inboundUser) throws CustomAuthException {
         if(inboundUser == null || inboundUser.getUsername() == null || inboundUser.getPassword() == null) {
-            throw new CustomAuthException("Password is not correct");
+            throw new CustomAuthException("Username or password cannot be null");
         }
         String username = inboundUser.getUsername();
         User foundUser = userService.loadUserByUsername(username);
+        if (foundUser == null) {
+            log.warn("User not found for username: {}", username);
+            throw new CustomAuthException("User not found");
+        }
 
-       if(passwordEncoder.matches(inboundUser.getPassword(), foundUser.getPassword()))  {
-           String accessToken = tokenService.generateAccessToken(foundUser);
-           String refreshToken = tokenService.generateRefreshToken(foundUser);
-
-           refreshTokenStorage.put(accessToken, refreshToken);
-           return new TokenResponseDto(accessToken, refreshToken);
-
-
-       } else {
-           throw new CustomAuthException("Password is not correct");
-       }
+        if (foundUser != null && passwordEncoder.matches(inboundUser.getPassword(), foundUser.getPassword())) {
+            String accessToken = tokenService.generateAccessToken(foundUser);
+            String refreshToken = tokenService.generateRefreshToken(foundUser);
+            refreshTokenStorage.put(accessToken, refreshToken);
+            return new TokenResponseDto(accessToken, refreshToken);
+        } else {
+            log.warn("Invalid password for user: {}", username);
+            throw new InvalidPasswordException("Password is not correct");
+        }
     }
 
     public TokenResponseDto getNewAccessToken(String inboundRefreshToken) {
         Claims refreshClaims = tokenService.getRefreshClaims(inboundRefreshToken);
         String username = refreshClaims.getSubject();
         String savedRefreshToken = refreshTokenStorage.get(username);
-        if(savedRefreshToken != null && savedRefreshToken.equals(inboundRefreshToken)) {
-            User founUser = userService.loadUserByUsername(username);
-            String accessToken = tokenService.generateAccessToken(founUser);
-            return new TokenResponseDto(accessToken, null); //todo
+        if (savedRefreshToken != null && savedRefreshToken.equals(inboundRefreshToken)) {
+            User foundUser = userService.loadUserByUsername(username);
+            String accessToken = tokenService.generateAccessToken(foundUser);
+            return new TokenResponseDto(accessToken, null);
         } else {
-            return new TokenResponseDto(null , null); //todo
+            throw new CustomAuthException("Invalid refresh token");
         }
     }
 

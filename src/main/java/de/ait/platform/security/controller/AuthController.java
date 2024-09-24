@@ -2,6 +2,7 @@ package de.ait.platform.security.controller;
 
 import de.ait.platform.security.dto.RefreshRequestDto;
 import de.ait.platform.security.dto.TokenResponseDto;
+import de.ait.platform.security.exception.CustomAuthException;
 import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.security.service.AuthService;
 import de.ait.platform.user.dto.UserResponseDto;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,16 +24,16 @@ public class AuthController {
     private final AuthService service;
     private final UserService userService;
 
-//    @ExceptionHandler(CustomAuthException.class)
-//    public void handleAuthException(CustomAuthException e) {
-//        throw e;
-//    }
+    @ExceptionHandler(CustomAuthException.class)
+    public void handleAuthException(CustomAuthException e) {
+        throw e;
+    }
 
-//    @Operation(summary = "User login", description = "Allows user to log in and obtain access and refresh tokens.")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Successful login", content = @Content(schema = @Schema(implementation = TokenResponseDto.class))),
-//            @ApiResponse(responseCode = "401", description = "Invalid credentials", content = @Content)
-//    })
+    @Operation(summary = "User login", description = "Allows user to log in and obtain access and refresh tokens.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful login", content = @Content(schema = @Schema(implementation = TokenResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials", content = @Content)
+    })
     @PostMapping("/login")
     public TokenResponseDto login(@RequestBody UserLoginDto user) {
 
@@ -57,5 +60,7 @@ public class AuthController {
     public UserResponseDto getAuthenticatedUser() {
         return service.getAuthenticatedUser();
     }
+
+
 
 }

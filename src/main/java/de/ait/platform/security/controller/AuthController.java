@@ -35,9 +35,10 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Invalid credentials", content = @Content)
     })
     @PostMapping("/login")
-    public TokenResponseDto login(@RequestBody UserLoginDto user) {
+    public ResponseEntity<TokenResponseDto> login(@RequestBody UserLoginDto inboundUser) {
+        TokenResponseDto token = service.login(inboundUser);
 
-            return service.login(user);
+            return ResponseEntity.ok(token);
 
 
     }

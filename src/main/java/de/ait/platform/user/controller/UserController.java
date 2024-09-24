@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
@@ -80,23 +80,28 @@ public class UserController {
     }
 
     @GetMapping("/check-username")
-    public ResponseEntity<Boolean> checkUsername(@RequestBody String username) {
-        if (username == null || username.isEmpty()) {
-            // Если username пустой, возвращаем статус 400 Bad Request
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
-        }
-        boolean isAvailable = service.isUsernameAvailable(username);
-        return ResponseEntity.ok(isAvailable);
+    public ResponseEntity<String> checkUsername(@RequestParam String username) {
+        boolean exists = service.isUsernameTaken(username);
 
+        if (exists) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Username is already taken");
+        }
+
+        return ResponseEntity.ok("Username is available");
     }
 
+
+
     @GetMapping("/check-email")
-    public ResponseEntity<Boolean> checkEmail(@RequestBody String email) {
-        if (email == null || email.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+    public ResponseEntity<String> checkEmail(@RequestParam String email) {
+        boolean exists = service.isUsernameTaken(email);
+        if (exists) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Email is already taken");
         }
-        boolean isAvailable = service.isEmailAvailable(email);
-        return ResponseEntity.ok(isAvailable);
+
+        return ResponseEntity.ok("Email is available");
     }
 }
 

@@ -15,6 +15,6 @@ public class UserLoginDto {
     @Schema(description = "User name", example = "john_doe")
     private String username;
 
-    @Schema(description = "User password", example = "password123", minLength = 8)
+    @Schema(description = "User password", example = "pasSword123 ", minLength = 8)
     private String password;
 }

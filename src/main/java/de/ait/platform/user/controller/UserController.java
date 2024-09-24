@@ -8,12 +8,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
@@ -25,7 +27,6 @@ public class UserController {
                             schema = @Schema(implementation = UserResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
     })
-
 
 
     @PostMapping("/users")
@@ -77,7 +78,38 @@ public class UserController {
     public UserResponseDto deleteUser(@PathVariable Long id) {
         return service.deleteUser(id);
     }
+
+    @GetMapping("/check-username")
+    public ResponseEntity<String> checkUsername(@RequestParam String username) {
+        boolean exists = service.isUsernameTaken(username);
+
+        if (exists) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Username is already taken");
+        }
+
+        return ResponseEntity.ok("Username is available");
+    }
+
+
+
+    @GetMapping("/check-email")
+    public ResponseEntity<String> checkEmail(@RequestParam String email) {
+        boolean exists = service.isUsernameTaken(email);
+        if (exists) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Email is already taken");
+        }
+
+        return ResponseEntity.ok("Email is available");
+    }
 }
+
+
+
+
+
+
 
 
 

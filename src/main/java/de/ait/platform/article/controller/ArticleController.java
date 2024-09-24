@@ -15,11 +15,6 @@ import java.util.List;
 @RequestMapping("/api")
 public class ArticleController {
     private final ArticleService service;
-//
-//    @GetMapping("/articles")
-//    private List<ResponseArticle> getArticles() {
-//        return service.fingAll();
-//    }
 
     @GetMapping("/articles/{id}")
     private ResponseArticle findById(@PathVariable Long id) {

@@ -7,14 +7,16 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-//public interface UserRepository extends JpaRepository<User, Long> {
-//
-//   @Query("SELECT u FROM User u WHERE u.userName = :userName")
-//   @Cacheable("users")
-//   User findByUserName(@Param("userName") String userName);
-//}
+
 public interface UserRepository extends JpaRepository<User, Long> {
-   public User findByEmail(String email);
-   public Optional<User> findUserByUsername(String username);
+    boolean existsByEmail(String email);
+
+    boolean existsByUsername(String username);
+
+    Optional<User> findUserByUsername(String username);
+
+    Optional<User> findUserById(Long id);
+
+    User findByEmail(String email);
 
 }

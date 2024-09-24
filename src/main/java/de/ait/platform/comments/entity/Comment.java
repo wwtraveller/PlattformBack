@@ -26,11 +26,11 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
     @JsonProperty("user")
     public String getUserUsername() {
         return user.getUsername();
     }
+
     @ManyToOne
     @JoinColumn(name = "article_id")
     @JsonBackReference

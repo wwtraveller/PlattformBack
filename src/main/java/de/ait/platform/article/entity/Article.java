@@ -19,6 +19,7 @@ import java.util.Set;
 @Getter
 @Setter
 
+
 @Entity
 @Table(name="articles")
 public class Article {

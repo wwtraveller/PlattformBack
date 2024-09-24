@@ -42,6 +42,7 @@ public class UserController {
     @GetMapping("/users")
     public List<UserResponseDto> getUsers() {
         return service.getUsers();
+
     }
     @Operation(summary = "Get user by ID")
     @ApiResponses(value = {
@@ -50,11 +51,11 @@ public class UserController {
                             schema = @Schema(implementation = UserResponseDto.class)) }),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
-
     @GetMapping("users/{id}")
     public UserResponseDto getUserById(@PathVariable(name = "id") Long id) {
         return service.getUserById(id);
     }
+
     @Operation(summary = "Update user by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User updated",
@@ -62,7 +63,6 @@ public class UserController {
                             schema = @Schema(implementation = UserResponseDto.class)) }),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
-
     @PutMapping("/users/{id}")
     public UserResponseDto updateUser(@PathVariable Long id, @RequestBody UserRequestDto dto) {
         return service.updateUser(id, dto);

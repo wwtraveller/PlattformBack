@@ -14,9 +14,11 @@ spring:
   mvc:
     converters:
       preferred-json-mapper: jackson
+
 server:
   port: 8080
 
 key:
   access: ${ACCESS_KEY}
   refresh: ${REFRESH_KEY}
+

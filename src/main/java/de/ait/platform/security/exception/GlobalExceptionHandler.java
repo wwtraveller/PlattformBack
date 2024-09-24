@@ -1,6 +1,5 @@
 package de.ait.platform.security.exception;
 
-import jakarta.security.auth.message.AuthException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

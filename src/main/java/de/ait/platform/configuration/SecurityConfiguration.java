@@ -1,6 +1,7 @@
 package de.ait.platform.configuration;
 
 import de.ait.platform.security.service.TokenFilter;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -83,4 +84,5 @@ public class SecurityConfiguration {
             }
         };
     }
+
 }

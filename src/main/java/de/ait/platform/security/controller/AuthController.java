@@ -3,6 +3,7 @@ package de.ait.platform.security.controller;
 import de.ait.platform.security.dto.RefreshRequestDto;
 import de.ait.platform.security.dto.TokenResponseDto;
 import de.ait.platform.security.exception.CustomAuthException;
+import de.ait.platform.security.exception.InvalidPasswordException;
 import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.security.service.AuthService;
 import de.ait.platform.user.dto.UserResponseDto;
@@ -24,9 +25,14 @@ public class AuthController {
     private final AuthService service;
     private final UserService userService;
 
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<String> handleInvalidPasswordException(InvalidPasswordException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
     @ExceptionHandler(CustomAuthException.class)
-    public void handleAuthException(CustomAuthException e) {
-        throw e;
+    public ResponseEntity<String> handleAuthException(CustomAuthException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
     @Operation(summary = "User login", description = "Allows user to log in and obtain access and refresh tokens.")
@@ -35,9 +41,10 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Invalid credentials", content = @Content)
     })
     @PostMapping("/login")
-    public TokenResponseDto login(@RequestBody UserLoginDto user) {
+    public ResponseEntity<TokenResponseDto> login(@RequestBody UserLoginDto inboundUser) {
+        TokenResponseDto token = service.login(inboundUser);
 
-            return service.login(user);
+            return ResponseEntity.status(HttpStatus.OK).body(token);
 
 
     }

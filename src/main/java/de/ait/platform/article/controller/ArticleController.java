@@ -2,6 +2,8 @@ package de.ait.platform.article.controller;
 
 import de.ait.platform.article.dto.RequestArticle;
 import de.ait.platform.article.dto.ResponseArticle;
+import de.ait.platform.article.exception.ArticleExceptions;
+import de.ait.platform.article.exception.ArticleNotFound;
 import de.ait.platform.article.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,7 +31,12 @@ public class ArticleController {
     })
     @GetMapping("/articles/{id}")
     public ResponseArticle findById(@Parameter(description = "ID of the article to retrieve") @PathVariable Long id) {
-        return service.fingById(id);
+        try {
+            return service.fingById(id);
+        }
+        catch (ArticleNotFound e){
+            throw new ArticleNotFound("Article with id: " + id + " not found");
+        }
     }
 
     @Operation(summary = "Create a new article", description = "Adds a new article")
@@ -41,7 +48,7 @@ public class ArticleController {
     })
     @PostMapping("/articles")
     public ResponseArticle addArticle(@RequestBody RequestArticle article) {
-        return service.createArticle(article);
+            return service.createArticle(article);
     }
 
     @Operation(summary = "Update article by ID", description = "Updates an existing article")
@@ -66,7 +73,13 @@ public class ArticleController {
     })
     @DeleteMapping("/articles/{id}")
     public ResponseArticle deleteArticle(@Parameter(description = "ID of the article to delete") @PathVariable Long id) {
-        return service.deleteArticle(id);
+        try {
+            return service.deleteArticle(id);
+        }
+        catch (ArticleNotFound e){
+            throw new ArticleNotFound("Article with id: " + id + " not found");
+        }
+
     }
 
     @Operation(summary = "Get all articles", description = "Retrieves a list of all articles")
@@ -79,7 +92,8 @@ public class ArticleController {
     public List<ResponseArticle> getArticle(@RequestParam(name="title", required = false, defaultValue = "") String title) {
         if (title.isEmpty()) {
             return service.fingAll();
-        } else {
+        }
+        else {
             return service.fingByTitle(title);
         }
     }

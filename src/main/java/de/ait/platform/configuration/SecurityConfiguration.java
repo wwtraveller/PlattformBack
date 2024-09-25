@@ -65,6 +65,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.PUT, "/api/comments/{id}").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/comments/{id}").hasAnyRole("ADMIN","USER")
                                 .anyRequest().authenticated()
+
                 )
                 .addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

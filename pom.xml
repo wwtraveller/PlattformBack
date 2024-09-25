@@ -84,13 +84,19 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.6.0</version>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.7.0</version>
         </dependency>
 
+        <!-- JUnit 5 -->
+        <!--        <dependency>-->
+        <!--                <groupId>org.junit.jupiter</groupId>-->
+        <!--                <artifactId>junit-jupiter</artifactId>-->
+        <!--                <version>5.9.0</version> &lt;!&ndash; Убедитесь, что версия актуальна &ndash;&gt;-->
+        <!--                <scope>test</scope>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

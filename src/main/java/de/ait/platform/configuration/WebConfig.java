@@ -9,7 +9,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*") // Прибираємо дублювання. "*" дозволяє будь-які домени
+                .allowedOrigins("*", "http://localhost:8080", "https://platform-qxs32.ondigitalocean.app", "https://platform-qxs32.ondigitalocean.app/api/swagger-ui/index.html", "https://platform-qxs32.ondigitalocean.app/api/swagger-ui/**") // Прибираємо дублювання. "*" дозволяє будь-які домени
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("Content-Type", "Accept", "Origin", "Authorization")
                 .exposedHeaders("Location");

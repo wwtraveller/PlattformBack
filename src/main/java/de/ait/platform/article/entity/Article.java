@@ -57,4 +57,11 @@ public class Article {
     public String getUserUsername() {
         return user.getUsername();
     }
+
+    public void addCategory(Category category) {
+        categories.add(category);
+    }
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
 }

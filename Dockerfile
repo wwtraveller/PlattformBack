@@ -1,5 +1,5 @@
 # Use an official Java runtime as a parent image
-FROM openjdk:22-slim
+FROM openjdk:21-slim
 
 # Set the working directory in the container
 WORKDIR /app
@@ -20,7 +20,7 @@ RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 # переходим к новому шагу
 # берем linux, в котором уже нет maven-а и прочего мусора, а есть только JRE (Виртуальная машина)
-FROM eclipse-temurin:22-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 # назвали нашу папку с зависимостями DEPENDENCY
 ARG DEPENDENCY=/workspace/app/target/dependency
 # из предыдущего шага забираем все зависимости и копируем их в новый linux

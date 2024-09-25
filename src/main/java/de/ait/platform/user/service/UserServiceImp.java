@@ -35,6 +35,12 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Transactional
     @Override
     public UserResponseDto createUser(UserRequestDto dto) {
+        if (dto.getUsername() == null || dto.getUsername().isEmpty() ||
+                dto.getEmail() == null || dto.getEmail().isEmpty() ||
+                dto.getPassword() == null || dto.getPassword().isEmpty()
+        ) {
+            throw new IllegalArgumentException("Required fields must not be null or empty");
+        }
         repository.findUserByUsername(dto.getUsername()).ifPresent(u -> {
             throw new RuntimeException("User " + u.getUsername() + " already exists");
         });
@@ -150,6 +156,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     public boolean isUsernameTaken(String username) {
         return repository.existsByUsername(username);
     }
+
     @Transactional
     @Override
     public boolean isEmailAvailable(String email) {

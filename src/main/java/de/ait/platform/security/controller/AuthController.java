@@ -63,6 +63,7 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Authenticated user details", content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "User not authenticated", content = @Content)
     })
+
     @GetMapping("/auth/me")
     public UserResponseDto getAuthenticatedUser() {
         return service.getAuthenticatedUser();

@@ -58,6 +58,13 @@ public class ArticleServiceImp implements ArticleService {
     @Transactional
     @Override
     public List<ResponseArticle> fingByTitle(String title) {
+
+        if (title == null || title.isEmpty()) {
+            throw new FieldCannotBeNull("Article with title: " + title + " not found");
+        }
+        if (title.isBlank()){
+            throw new FieldIsBlank("Title cannot be blank");
+        }
         Predicate<Article> predicateByTitle =
                 (title.equals("")) ? a-> true:  article -> article.getTitle().equalsIgnoreCase(title);
         List<Article> articleList = repository.findAll().stream().filter(predicateByTitle).toList();
@@ -80,7 +87,15 @@ public class ArticleServiceImp implements ArticleService {
 //            throw new FieldIsTaken("That title already exist");
 //        }
 
+        boolean isEmpty = repository.findAll()
+                .stream()
+                .filter((dto.getTitle().equals("")) ? a -> true : article -> article.getTitle().equalsIgnoreCase(dto.getTitle()))
+                .toList()
+                .isEmpty();
 
+        if (!isEmpty){
+            throw new FieldIsTaken("Title: " + dto.getTitle() + " is already taken");
+        }
         if (dto.getContent() == null) {
             throw new FieldCannotBeNull("Content cannot be null");
         }
@@ -113,7 +128,7 @@ public class ArticleServiceImp implements ArticleService {
     @Transactional
     @Override
     public ResponseArticle updateArticle(Long id, RequestArticle dto) {
-//        if (!fingByTitle(dto.getTitle()).isEmpty()) {
+//        if (fingByTitle(dto.getTitle()).if) {
 //            throw new FieldIsTaken("That title already exist");
 //        }
 

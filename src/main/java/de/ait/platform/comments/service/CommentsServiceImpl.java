@@ -28,6 +28,11 @@ public class CommentsServiceImpl implements CommentsService {
     @Override
     public List<CommentsResponseDto> getAllComments() {
         List<Comment> comments = commentsRepository.findAll();
+        if (comments.isEmpty()) {
+
+            throw new CommentNotFound("No comments found");
+        }
+
         return comments.stream().map(c->mapper.map(c, CommentsResponseDto.class)).toList();
     }
 
@@ -44,18 +49,17 @@ public class CommentsServiceImpl implements CommentsService {
     @Override
     public CommentsResponseDto save(CommentsRequestDto dto) {
         User user = userRepository.findById(dto.getUser_id())
-                .orElseThrow(() -> new UserNotFound("Пользователь не найден с ID: " + dto.getUser_id()));
+                .orElseThrow(() -> new UserNotFound("User with ID: " + dto.getUser_id() + " not found"));
         Article article = articleRepository.findById(dto.getArticle_id())
-                .orElseThrow(() -> new ArticleNotFound("Статья не найдена с ID: " + dto.getArticle_id()));
+                .orElseThrow(() -> new ArticleNotFound("Article with  ID: " + dto.getArticle_id() + "not found"));
         Comment newComment = new Comment();
         newComment.setText(dto.getText());
         newComment.setUser(user);
         newComment.setArticle(article);
         Comment savedComment = commentsRepository.save(newComment);
-        CommentsResponseDto commentsResponseDto = new CommentsResponseDto(savedComment.getId(),
+        return new CommentsResponseDto(savedComment.getId(),
                 newComment.getText(),newComment
                 .getUser().getId(), newComment.getArticle().getId());
-        return commentsResponseDto;
     }
 
     @Transactional

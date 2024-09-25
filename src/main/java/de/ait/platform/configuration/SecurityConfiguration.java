@@ -76,7 +76,7 @@ public class SecurityConfiguration {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:8080", "https://platform-qxs32.ondigitalocean.app")
+                        .allowedOrigins("http://localhost:8080", "https://platform-qxs32.ondigitalocean.app", "https://platform-qxs32.ondigitalocean.app/api/swagger-ui/index.html", "https://platform-qxs32.ondigitalocean.app/api/swagger-ui/**")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);

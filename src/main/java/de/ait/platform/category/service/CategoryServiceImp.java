@@ -11,13 +11,11 @@ import de.ait.platform.category.repository.CategoryRepository;
 import de.ait.platform.role.entity.Role;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -26,6 +24,12 @@ public class CategoryServiceImp implements CategoryService {
     private final CategoryRepository repository;
 
     private final ArticleRepository articleRepository;
+@Autowired
+    public CategoryServiceImp(ArticleRepository articleRepository, CategoryRepository repository, ModelMapper mapper) {
+        this.articleRepository = articleRepository;
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
     @Override
     public List<CategoryResponse> findAll() {
@@ -66,11 +70,13 @@ public class CategoryServiceImp implements CategoryService {
         if (category.isPresent()) {
             if (article.isPresent()) {
                 return category.get().addArticle(mapper.map(article, Article.class));
+            } else {
+                throw new CategoryNotFound("Error article with id  " + articleId + " not found.");
             }
         } else {
             throw new CategoryNotFound("Category with id:" + categoryId + " not found");
         }
-        return List.of(mapper.map(article, Article.class));
+
     }
 
     @Transactional
@@ -88,9 +94,17 @@ public class CategoryServiceImp implements CategoryService {
     @Transactional
     @Override
     public CategoryResponse save(CategoryRequest categoryDTO) {
-        Category entity = mapper.map(categoryDTO, Category.class);
-        Category newCategory = repository.save(entity);
-        return mapper.map(newCategory, CategoryResponse.class);
+        if (!categoryDTO.getName().isBlank()) {
+            if (repository.findByName(categoryDTO.getName()).isEmpty()) {
+                Category entity = mapper.map(categoryDTO, Category.class);
+                Category newCategory = repository.save(entity);
+                return mapper.map(newCategory, CategoryResponse.class);
+            } else {
+                throw new CategoryNotFound("Error Category with name " + categoryDTO.getName() + " is taken");
+            }
+        } else {
+            throw new CategoryNotFound("Error. Category name cannot be empty");
+        }
     }
 
     @Transactional
@@ -98,8 +112,15 @@ public class CategoryServiceImp implements CategoryService {
     public CategoryResponse update(Long id, CategoryRequest categoryDTO) {
         Category existingCategory = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
-        if (categoryDTO.getName() != null && !categoryDTO.getName().isEmpty()) {
-            existingCategory.setName(categoryDTO.getName());
+        if (!categoryDTO.getName().isBlank()) {
+
+            if (repository.findByName(categoryDTO.getName()).isEmpty()) {
+                existingCategory.setName(categoryDTO.getName());
+            } else {
+                throw new CategoryNotFound("Error Category with name " + categoryDTO.getName() + " is taken");
+            }
+        } else {
+            throw new CategoryNotFound("Error. Category name cannot be empty");
         }
         Category updatedCategory = repository.save(existingCategory);
 

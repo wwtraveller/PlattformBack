@@ -98,7 +98,7 @@ public class UserController {
 
     @GetMapping("/check-email")
     public ResponseEntity<String> checkEmail(@RequestParam String email) {
-        boolean exists = service.isUsernameTaken(email);
+        boolean exists = service.isEmailAvailable(email);
         if (exists) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body("Email is already taken");

@@ -54,8 +54,14 @@ public class UserRequestDto {
         this.photo = "";
     }
 
-    public UserRequestDto(String username, String password) {
+//    public UserRequestDto(String username, String password) {
+//        this.username = username;
+//        this.password = password;
+//    }
+
+    public UserRequestDto(String username, String email, String password) {
         this.username = username;
+        this.email = email;
         this.password = password;
     }
 }

@@ -35,9 +35,9 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Transactional
     @Override
     public UserResponseDto createUser(UserRequestDto dto) {
-        if (dto.getUsername() == null || dto.getUsername().isEmpty() ||
-                dto.getEmail() == null || dto.getEmail().isEmpty() ||
-                dto.getPassword() == null || dto.getPassword().isEmpty()
+        if (dto.getUsername() == null || dto.getUsername().isBlank() ||
+                dto.getEmail() == null || dto.getEmail().isBlank() ||
+                dto.getPassword() == null || dto.getPassword().isBlank()
         ) {
             throw new IllegalArgumentException("Required fields must not be null or empty");
         }

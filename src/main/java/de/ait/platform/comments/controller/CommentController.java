@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class CommentController {
-
+@Autowired
     private final CommentsService commentsService;
 
     @Operation(summary = "Get all comments", description = "Retrieves a list of all comments")
@@ -80,4 +81,5 @@ public class CommentController {
     public CommentsResponseDto deleteComment(@Parameter(description = "ID of the comment to delete") @PathVariable Long id) {
         return commentsService.deleteComment(id);
     }
+
 }

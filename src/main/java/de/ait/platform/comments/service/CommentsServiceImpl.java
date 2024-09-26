@@ -6,8 +6,6 @@ import de.ait.platform.article.repository.ArticleRepository;
 import de.ait.platform.comments.dto.CommentsRequestDto;
 import de.ait.platform.comments.dto.CommentsResponseDto;
 import de.ait.platform.comments.entity.Comment;
-import de.ait.platform.comments.exception.CommentConflictException;
-import de.ait.platform.comments.exception.CommentForbiddenException;
 import de.ait.platform.comments.exception.CommentNotFound;
 import de.ait.platform.comments.repository.CommentsRepository;
 import de.ait.platform.user.entity.User;
@@ -28,6 +26,7 @@ public class CommentsServiceImpl implements CommentsService {
     private final UserRepository userRepository;
     private final ArticleRepository articleRepository;
     private final ModelMapper mapper;
+
 @Autowired
     public CommentsServiceImpl(CommentsRepository commentsRepository, UserRepository userRepository, ArticleRepository articleRepository, ModelMapper mapper) {
         this.commentsRepository = commentsRepository;
@@ -40,13 +39,10 @@ public class CommentsServiceImpl implements CommentsService {
     public List<CommentsResponseDto> getAllComments() {
         List<Comment> comments = commentsRepository.findAll();
         if (comments.isEmpty()) {
-
             throw new CommentNotFound("No comments found");
         }
-
         return comments.stream().map(c->mapper.map(c, CommentsResponseDto.class)).toList();
     }
-
     @Transactional
     @Override
     public CommentsResponseDto getCommentById(Long id) {
@@ -60,10 +56,10 @@ public class CommentsServiceImpl implements CommentsService {
     @Override
     public CommentsResponseDto save(CommentsRequestDto dto) {
         User user = userRepository.findById(dto.getUser_id())
-                .orElseThrow(() -> new UserNotFound(STR."User with ID: \{dto.getUser_id()} not found"));
-        Article article = articleRepository.findById(dto.getArticle_id())
-                .orElseThrow(() -> new ArticleNotFound(STR."Article with  ID: \{dto.getArticle_id()}not found"));
+                .orElseThrow(() -> new UserNotFound("User with ID: " + dto.getUser_id() + " not found"));
 
+        Article article = articleRepository.findById(dto.getArticle_id())
+                .orElseThrow(() -> new ArticleNotFound("Article with  ID: "+ dto.getArticle_id() +"not found"));
         Comment newComment = new Comment();
         newComment.setText(dto.getText());
         newComment.setUser(user);

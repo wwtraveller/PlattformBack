@@ -1,7 +1,6 @@
 package de.ait.platform.category.repository;
 
 import de.ait.platform.category.entity.Category;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

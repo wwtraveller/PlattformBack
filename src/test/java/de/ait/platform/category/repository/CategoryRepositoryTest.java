@@ -30,27 +30,21 @@ class CategoryRepositoryTest {
 
         Category categories = categoryRepository.findByName(finance.getName()).getFirst();
         Assertions.assertThat(categories).isNotNull();
-
     }
+
     @Test
     public void CategoryRepository_Save_ReturnSavedCategory() {
-
-
         //Arrange
         Category category = Category
                 .builder()
                 .name("Category").build();
-
-
         //Act
         Category savedCategory = categoryRepository.save(category);
-
-
         //Assert
         Assertions.assertThat(savedCategory).isNotNull();
         Assertions.assertThat(savedCategory.getId()).isGreaterThan(0);
-
     }
+
     @Test
     public void CategoryRepository_FindAll_ReturnListCategories() {
         Category category = Category
@@ -82,6 +76,5 @@ class CategoryRepositoryTest {
 
         Category categories = categoryRepository.findById(finance.getId()).get();
         Assertions.assertThat(categories).isNotNull();
-
     }
 }

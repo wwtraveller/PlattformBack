@@ -59,9 +59,9 @@ public class CommentsServiceImpl implements CommentsService {
     @Override
     public CommentsResponseDto save(CommentsRequestDto dto) {
         User user = userRepository.findById(dto.getUser_id())
-                .orElseThrow(() -> new UserNotFound(STR."User with ID: \{dto.getUser_id()} not found"));
+                .orElseThrow(() -> new UserNotFound("User with ID: " + dto.getUser_id() + " not found"));
         Article article = articleRepository.findById(dto.getArticle_id())
-                .orElseThrow(() -> new ArticleNotFound(STR."Article with  ID: \{dto.getArticle_id()}not found"));
+                .orElseThrow(() -> new ArticleNotFound("Article with  ID: " + dto.getArticle_id() + "not found"));
 
         Comment newComment = new Comment();
         newComment.setText(dto.getText());

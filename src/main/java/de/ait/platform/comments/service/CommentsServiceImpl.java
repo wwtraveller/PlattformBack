@@ -6,6 +6,8 @@ import de.ait.platform.article.repository.ArticleRepository;
 import de.ait.platform.comments.dto.CommentsRequestDto;
 import de.ait.platform.comments.dto.CommentsResponseDto;
 import de.ait.platform.comments.entity.Comment;
+import de.ait.platform.comments.exception.CommentConflictException;
+import de.ait.platform.comments.exception.CommentForbiddenException;
 import de.ait.platform.comments.exception.CommentNotFound;
 import de.ait.platform.comments.repository.CommentsRepository;
 import de.ait.platform.user.entity.User;
@@ -61,6 +63,7 @@ public class CommentsServiceImpl implements CommentsService {
                 .orElseThrow(() -> new UserNotFound(STR."User with ID: \{dto.getUser_id()} not found"));
         Article article = articleRepository.findById(dto.getArticle_id())
                 .orElseThrow(() -> new ArticleNotFound(STR."Article with  ID: \{dto.getArticle_id()}not found"));
+
         Comment newComment = new Comment();
         newComment.setText(dto.getText());
         newComment.setUser(user);
@@ -77,6 +80,10 @@ public class CommentsServiceImpl implements CommentsService {
         Comment comment = commentsRepository
                 .findById(id)
                 .orElseThrow(() -> new CommentNotFound("Comment not found"));
+
+        if(!comment.getUser().getId().equals(comment.getArticle().getUser().getId())) {
+            throw new CommentForbiddenException("You are not allowed to delete this comment");
+        }
         commentsRepository.deleteById(id);
         return mapper.map(comment, CommentsResponseDto.class);
     }
@@ -87,6 +94,9 @@ public class CommentsServiceImpl implements CommentsService {
     public CommentsResponseDto updateComment(Long id, CommentsRequestDto dto) {
         Comment comment = commentsRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFound("Comment not found"));
+        if(!comment.getUser().getId().equals(comment.getArticle().getUser().getId())) {
+            throw new CommentForbiddenException("You are not allowed to delete this comment");
+        }
         comment.setText(dto.getText());
         Comment updatedComment = commentsRepository.save(comment);
         return mapper.map(updatedComment, CommentsResponseDto.class);

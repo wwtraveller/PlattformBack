@@ -80,10 +80,10 @@ public class CommentsServiceImpl implements CommentsService {
         Comment comment = commentsRepository
                 .findById(id)
                 .orElseThrow(() -> new CommentNotFound("Comment not found"));
-
-        if(!comment.getUser().getId().equals(comment.getArticle().getUser().getId())) {
-            throw new CommentForbiddenException("You are not allowed to delete this comment");
-        }
+//
+//        if(!comment.getUser().getId().equals(comment.getArticle().getUser().getId())) {
+//            throw new CommentForbiddenException("You are not allowed to delete this comment");
+//        }
         commentsRepository.deleteById(id);
         return mapper.map(comment, CommentsResponseDto.class);
     }
@@ -94,9 +94,9 @@ public class CommentsServiceImpl implements CommentsService {
     public CommentsResponseDto updateComment(Long id, CommentsRequestDto dto) {
         Comment comment = commentsRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFound("Comment not found"));
-        if(!comment.getUser().getId().equals(comment.getArticle().getUser().getId())) {
-            throw new CommentForbiddenException("You are not allowed to delete this comment");
-        }
+//        if(!comment.getUser().getId().equals(comment.getArticle().getUser().getId())) {
+//            throw new CommentForbiddenException("You are not allowed to delete this comment");
+//        }
         comment.setText(dto.getText());
         Comment updatedComment = commentsRepository.save(comment);
         return mapper.map(updatedComment, CommentsResponseDto.class);

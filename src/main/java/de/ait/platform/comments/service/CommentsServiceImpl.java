@@ -6,13 +6,12 @@ import de.ait.platform.article.repository.ArticleRepository;
 import de.ait.platform.comments.dto.CommentsRequestDto;
 import de.ait.platform.comments.dto.CommentsResponseDto;
 import de.ait.platform.comments.entity.Comment;
-import de.ait.platform.comments.exception.CommentConflictException;
-import de.ait.platform.comments.exception.CommentForbiddenException;
 import de.ait.platform.comments.exception.CommentNotFound;
 import de.ait.platform.comments.repository.CommentsRepository;
 import de.ait.platform.user.entity.User;
 import de.ait.platform.user.exceptions.UserNotFound;
 import de.ait.platform.user.reposittory.UserRepository;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,20 +20,20 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
-
+@AllArgsConstructor
 @Service
 public class CommentsServiceImpl implements CommentsService {
     private final CommentsRepository commentsRepository;
     private final UserRepository userRepository;
     private final ArticleRepository articleRepository;
     private final ModelMapper mapper;
-@Autowired
-    public CommentsServiceImpl(CommentsRepository commentsRepository, UserRepository userRepository, ArticleRepository articleRepository, ModelMapper mapper) {
-        this.commentsRepository = commentsRepository;
-        this.userRepository = userRepository;
-        this.articleRepository = articleRepository;
-        this.mapper = mapper;
-    }
+//@Autowired
+//    public CommentsServiceImpl(CommentsRepository commentsRepository, UserRepository userRepository, ArticleRepository articleRepository, ModelMapper mapper) {
+//        this.commentsRepository = commentsRepository;
+//        this.userRepository = userRepository;
+//        this.articleRepository = articleRepository;
+//        this.mapper = mapper;
+//    }
 
     @Override
     public List<CommentsResponseDto> getAllComments() {

@@ -1,11 +1,15 @@
 package de.ait.platform.security.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import java.util.Objects;
 
 @Getter
+@Schema(description = "DTO for refresh token request")
 public class RefreshRequestDto {
-  private String refreshToken;
+
+    @Schema(description = "Refresh token provided to obtain a new access token", example = "abc123def456", required = true)
+    private String refreshToken;
 
     @Override
     public final boolean equals(Object o) {

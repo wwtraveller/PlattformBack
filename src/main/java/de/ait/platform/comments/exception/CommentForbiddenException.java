@@ -3,10 +3,8 @@ package de.ait.platform.comments.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class CommentNotFound extends RuntimeException {
-     public  CommentNotFound (String message) {
+@ResponseStatus(HttpStatus.FORBIDDEN)
+public class CommentForbiddenException extends RuntimeException {
+     public CommentForbiddenException(String message) {
           super(message);
-     }
-}
-
+     }}

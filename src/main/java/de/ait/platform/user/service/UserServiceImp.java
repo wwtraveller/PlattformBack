@@ -159,7 +159,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     @Transactional
     @Override
-    public boolean isEmailAvailable(String email) {
+    public boolean isEmailTaken(String email) {
         return repository.existsByEmail(email);
 
     }

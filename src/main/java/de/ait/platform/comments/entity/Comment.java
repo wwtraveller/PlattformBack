@@ -6,9 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import de.ait.platform.article.entity.Article;
 import de.ait.platform.user.entity.User;
 import jakarta.persistence.*;
-import lombok.*;
-
-
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter

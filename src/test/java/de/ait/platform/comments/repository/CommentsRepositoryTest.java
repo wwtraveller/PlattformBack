@@ -1,22 +1,20 @@
 package de.ait.platform.comments.repository;
 
-
 import de.ait.platform.article.entity.Article;
-import de.ait.platform.article.repository.ArticleRepository;
 import de.ait.platform.comments.dto.CommentsResponseDto;
 import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.user.entity.User;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-
+import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class CommentsRepositoryTest {
+class CommentsRepositoryTest {
     @Autowired
     private CommentsRepository commentsRepository;
 

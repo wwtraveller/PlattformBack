@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
@@ -76,5 +77,34 @@ class CategoryRepositoryTest {
 
         Category categories = categoryRepository.findById(finance.getId()).get();
         Assertions.assertThat(categories).isNotNull();
+    }
+
+    @Test
+    public void CategoryRepository_UpdateCategory_ReturnUpdatedCategory() {
+        Category category = Category
+                .builder()
+                .name("Category").build();
+        Category finance = Category.builder()
+                .name("Finance")
+                .build();
+
+        categoryRepository.save(finance);
+        categoryRepository.save(category);
+
+        Category categories = categoryRepository.findById(finance.getId()).get();
+        categories.setName("Updated Category");
+        Category savedCategory = categoryRepository.save(categories);
+        Assertions.assertThat(savedCategory.getName()).isNotNull();
+    }
+    @Test
+    public void CategoryRepository_DeleteCategory_ReturnCategoryIsEmpty() {
+
+        Category finance = Category.builder()
+                .name("Finance")
+                .build();
+        categoryRepository.save(finance);
+        categoryRepository.deleteById(finance.getId());
+     Optional<Category> returnCategory = categoryRepository.findById(finance.getId());
+        Assertions.assertThat(returnCategory).isEmpty();
     }
 }

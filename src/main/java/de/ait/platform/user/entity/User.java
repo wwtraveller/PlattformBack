@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.role.entity.Role;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,11 +16,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-
+@Builder
 @Entity
 @Table(name = "t_user")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")

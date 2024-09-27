@@ -1,6 +1,7 @@
 package de.ait.platform.security.entity;
 
 import de.ait.platform.role.entity.Role;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

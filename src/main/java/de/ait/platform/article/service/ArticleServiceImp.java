@@ -128,18 +128,7 @@ public class ArticleServiceImp implements ArticleService {
     @Transactional
     @Override
     public ResponseArticle updateArticle(Long id, RequestArticle dto) {
-//        if (fingByTitle(dto.getTitle()).if) {
-//            throw new FieldIsTaken("That title already exist");
-//        }
-        boolean isEmpty = repository.findAll()
-                .stream()
-                .filter((dto.getTitle().equals("")) ? a -> true : article -> article.getTitle().equalsIgnoreCase(dto.getTitle()))
-                .toList()
-                .isEmpty();
 
-        if (!isEmpty){
-            throw new FieldIsTaken("Title: " + dto.getTitle() + " is already taken");
-        }
         Article existingArticle = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Article not found with id: " + id));
 

@@ -14,7 +14,7 @@ target/
 .settings
 .springBeans
 .sts4-cache
-.src/test/java/de/ait/platform/user/service/UserServiceImpTest.java
+UserServiceImpTest.java
 
 ### IntelliJ IDEA ###
 .idea

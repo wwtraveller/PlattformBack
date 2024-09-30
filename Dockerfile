@@ -29,4 +29,3 @@ COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 # запускаем приложение вместе со всеми библиотеками
 ENTRYPOINT ["java","-cp","app:app/lib/*", "de.ait.platform.PlatformApplication"]
-

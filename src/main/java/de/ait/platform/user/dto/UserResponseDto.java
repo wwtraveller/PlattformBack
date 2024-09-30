@@ -1,8 +1,10 @@
 package de.ait.platform.user.dto;
 
 import de.ait.platform.role.entity.Role;
+import de.ait.platform.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class UserResponseDto {
 
     @Schema(description = "Unique identifier of user", example = "1")
@@ -36,9 +39,6 @@ public class UserResponseDto {
     @Schema(description = "Set of roles assigned to the user")
     private Set<Role> roles;
 
-
-
-
-    }
+}
 
 

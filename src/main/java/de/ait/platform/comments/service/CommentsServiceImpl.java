@@ -11,7 +11,6 @@ import de.ait.platform.comments.repository.CommentsRepository;
 import de.ait.platform.user.entity.User;
 import de.ait.platform.user.exceptions.UserNotFound;
 import de.ait.platform.user.reposittory.UserRepository;
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +26,7 @@ public class CommentsServiceImpl implements CommentsService {
     private final UserRepository userRepository;
     private final ArticleRepository articleRepository;
     private final ModelMapper mapper;
+
 @Autowired
     public CommentsServiceImpl(CommentsRepository commentsRepository, UserRepository userRepository, ArticleRepository articleRepository, ModelMapper mapper) {
         this.commentsRepository = commentsRepository;
@@ -39,13 +39,10 @@ public class CommentsServiceImpl implements CommentsService {
     public List<CommentsResponseDto> getAllComments() {
         List<Comment> comments = commentsRepository.findAll();
         if (comments.isEmpty()) {
-
             throw new CommentNotFound("No comments found");
         }
-
         return comments.stream().map(c->mapper.map(c, CommentsResponseDto.class)).toList();
     }
-
     @Transactional
     @Override
     public CommentsResponseDto getCommentById(Long id) {
@@ -60,9 +57,9 @@ public class CommentsServiceImpl implements CommentsService {
     public CommentsResponseDto save(CommentsRequestDto dto) {
         User user = userRepository.findById(dto.getUser_id())
                 .orElseThrow(() -> new UserNotFound("User with ID: " + dto.getUser_id() + " not found"));
-        Article article = articleRepository.findById(dto.getArticle_id())
-                .orElseThrow(() -> new ArticleNotFound("Article with  ID: " + dto.getArticle_id() + "not found"));
 
+        Article article = articleRepository.findById(dto.getArticle_id())
+                .orElseThrow(() -> new ArticleNotFound("Article with  ID: "+ dto.getArticle_id() +"not found"));
         Comment newComment = new Comment();
         newComment.setText(dto.getText());
         newComment.setUser(user);

@@ -81,4 +81,5 @@ public class CommentController {
     public CommentsResponseDto deleteComment(@Parameter(description = "ID of the comment to delete") @PathVariable Long id) {
         return commentsService.deleteComment(id);
     }
+
 }

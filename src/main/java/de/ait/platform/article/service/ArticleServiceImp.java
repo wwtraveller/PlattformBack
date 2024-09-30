@@ -143,9 +143,16 @@ public class ArticleServiceImp implements ArticleService {
         Article existingArticle = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Article not found with id: " + id));
 
-
         if (dto.getComments() != null && !dto.getComments().isEmpty()) {
             existingArticle.setComments(dto.getComments());
+        }
+
+        if (dto.getTitle() != null && !dto.getTitle().isEmpty()) {
+            existingArticle.setTitle(dto.getTitle());
+        }
+
+        if (dto.getContent() != null && !dto.getContent().isEmpty()) {
+            existingArticle.setContent(dto.getContent());
         }
 
         if (dto.getCategories() != null && !dto.getCategories().isEmpty()) {

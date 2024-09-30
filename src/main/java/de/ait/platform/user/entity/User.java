@@ -5,7 +5,12 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.role.entity.Role;
 import jakarta.persistence.*;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,9 +23,9 @@ import java.util.Objects;
 import java.util.Set;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
 @Builder
 @Entity
 @Table(name = "t_user")
@@ -71,7 +76,7 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    //@PrePersist
+    @PrePersist
     private void init() {
         dateCreated = ZonedDateTime.now(ZoneId.of("UTC")).toLocalDateTime(); // or any other timezone
     }

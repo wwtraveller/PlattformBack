@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.role.entity.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,9 +22,10 @@ import java.util.Objects;
 import java.util.Set;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-
+@Builder
 @Entity
 @Table(name = "t_user")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")
@@ -72,7 +75,7 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    //@PrePersist
+    @PrePersist
     private void init() {
         dateCreated = ZonedDateTime.now(ZoneId.of("UTC")).toLocalDateTime(); // or any other timezone
     }

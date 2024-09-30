@@ -22,9 +22,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>("Token not found: " + ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
-    // Обработчик для других исключений
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<String> handleGlobalException(Exception ex, WebRequest request) {
-//        return new ResponseEntity<>("Error: " + ex.getMessage(), HttpStatus.UNAUTHORIZED);
-//    }
+     // Обработчик для других исключений
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGlobalException(Exception ex, WebRequest request) {
+        return new ResponseEntity<>("Error: " + ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
 }

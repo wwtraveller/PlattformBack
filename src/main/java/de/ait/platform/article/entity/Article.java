@@ -7,10 +7,7 @@ import de.ait.platform.category.entity.Category;
 import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -18,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-
+@Builder
 
 @Entity
 @Table(name="articles")
@@ -31,7 +28,7 @@ public class Article {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "photo")

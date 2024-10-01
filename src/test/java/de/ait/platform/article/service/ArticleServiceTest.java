@@ -227,7 +227,7 @@ public void ArticleService_FindByTitle_ReturnArticle() {
 
     @Test
     public void ArticleService_DeleteById_ReturnArticle() {
-        //Arrange
+        // Arrange
         Article article = Article
                 .builder()
                 .id(1L)
@@ -237,11 +237,12 @@ public void ArticleService_FindByTitle_ReturnArticle() {
                 .comments(new HashSet<>())
                 .build();
         when(articleRepository.findById(any())).thenReturn(Optional.of(article));
-        when(articleRepository.save(any())).thenReturn(article);
-        doNothing().when(articleRepository).delete(any());
-        //Act
-        ResponseArticle responseArticle = articleService.deleteArticle(1L);
-        //Assert
-        Assertions.assertThat(responseArticle).isNull();
+
+        // Act
+        articleService.deleteArticle(1L);
+        when(articleRepository.findById(any())).thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThat(articleRepository.findById(1L)).isEmpty();
     }
 }

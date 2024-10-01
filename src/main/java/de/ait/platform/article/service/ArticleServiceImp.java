@@ -179,7 +179,11 @@ public class ArticleServiceImp implements ArticleService {
                     comment.setUser(null);
                 }
                 foundedArticle.get().setComments(new HashSet<>());
-                repository.deleteById(id);
+                try {
+                    repository.deleteById(id);
+                } catch (Exception e) {
+                    throw new RuntimeException("Error deleting article with id: " + id, e);
+                }
             }
         }
         else {

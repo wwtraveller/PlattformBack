@@ -7,10 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Objects;
@@ -19,7 +16,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
-
+@Builder
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "t_role")

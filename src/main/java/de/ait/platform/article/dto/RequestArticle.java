@@ -3,10 +3,7 @@ package de.ait.platform.article.dto;
 import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
 import java.util.Set;
@@ -15,6 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Schema(description = "DTO for creating or updating an article")
 public class RequestArticle {
 

@@ -36,7 +36,7 @@ public class ArticleServiceImp implements ArticleService {
 
     @Transactional
     @Override
-    public List<ResponseArticle> fingAll() {
+    public List<ResponseArticle> findAll() {
         List<Article> list = repository.findAll();
         return list.stream()
                 .map(article -> mapper.map(article, ResponseArticle.class))
@@ -45,7 +45,7 @@ public class ArticleServiceImp implements ArticleService {
 
     @Transactional
     @Override
-    public ResponseArticle fingById(Long id) {
+    public ResponseArticle findById(Long id) {
         Optional<Article> article = repository.findById(id);
         if (article.isPresent()) {
             return mapper.map(article.get(), ResponseArticle.class);
@@ -57,7 +57,7 @@ public class ArticleServiceImp implements ArticleService {
 
     @Transactional
     @Override
-    public List<ResponseArticle> fingByTitle(String title) {
+    public List<ResponseArticle> findByTitle(String title) {
 
         if (title == null || title.isEmpty()) {
             throw new FieldCannotBeNull("Article with title: " + title + " not found");
@@ -131,15 +131,6 @@ public class ArticleServiceImp implements ArticleService {
 //        if (fingByTitle(dto.getTitle()).if) {
 //            throw new FieldIsTaken("That title already exist");
 //        }
-        boolean isEmpty = repository.findAll()
-                .stream()
-                .filter((dto.getTitle().equals("")) ? a -> true : article -> article.getTitle().equalsIgnoreCase(dto.getTitle()))
-                .toList()
-                .isEmpty();
-
-        if (!isEmpty){
-            throw new FieldIsTaken("Title: " + dto.getTitle() + " is already taken");
-        }
         Article existingArticle = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Article not found with id: " + id));
 

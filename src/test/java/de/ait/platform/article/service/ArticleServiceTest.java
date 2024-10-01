@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -105,14 +106,11 @@ class ArticleServiceTest {
 
         articleRepository.save(article);
         articleRepository.save(article2);
-        ResponseArticle responseArticle = Mockito.mock(ResponseArticle.class);
         //Act
         List<Article> all = articleRepository.findAll();
         List<ResponseArticle> articleList = all.stream()
                 .map(a-> articleMapper.map(a, ResponseArticle.class))
                         .toList();
-
-
         //Assert
         Assertions.assertThat(articleList).isNotNull();
 
@@ -127,14 +125,7 @@ class ArticleServiceTest {
                 .content("My Content")
                 .photo("")
                 .build();
-        ResponseArticle responseArticle = ResponseArticle
-                .builder()
-                .title("My Article")
-                .content("My Content")
-                .photo("")
-                .build();
         when(articleRepository.findById(any())).thenReturn(Optional.of(article));
-        when(articleMapper.map(any(Article.class), any())).thenReturn(responseArticle);
         //Act
         ResponseArticle articleResponse = articleService.findById(1L);
 
@@ -142,32 +133,60 @@ class ArticleServiceTest {
         assertNotNull(articleResponse);
     }
 
-    @Test
-    public void ArticleService_FindByTitle_ReturnArticle() {
-        //Arrange
-        //Arrange
-        Article article = Article
-                .builder()
-                .title("My Article")
-                .content("My Content")
-                .photo("")
-                .build();
-        ResponseArticle responseArticle = ResponseArticle
-                .builder()
-                .title("My Article")
-                .content("My Content")
-                .photo("")
-                .build();
-        when(articleRepository.findByTitle(any())).thenReturn(article);
-        when(articleMapper.map(any(Article.class), any())).thenReturn(responseArticle);
-        //Act
-        List<ResponseArticle> articleResponse = articleService.findByTitle("My Article");
+//    @Test
+//    public void ArticleService_FindByTitle_ReturnArticle() {
+//        Article article = Article
+//                .builder()
+//                .title("My Article")
+//                .content("My Content")
+//                .photo("")
+//                .build();
+//        articleRepository.save(article);
+//        when(articleRepository.findByTitle(article.getTitle())).thenReturn(article);
+//        //Act
+//        List<ResponseArticle> articleResponse = articleService.findByTitle(article.getTitle());
+//
+//        //Assert
+//        Assertions.assertThat(articleResponse).isNotNull();
+//        Article article = Article
+//                .builder()
+//                .title("My Article")
+//                .content("My Content")
+//                .photo("")
+//                .build();
+//        ResponseArticle responseArticle = ResponseArticle
+//                .builder()
+//                .title("My Article")
+//                .content("My Content")
+//                .photo("")
+//                .build();
+//        when(articleRepository.findByTitle(any())).thenReturn(article);
+//        when(articleMapper.map(any(Article.class), any())).thenReturn(responseArticle);
+//        //Act
+//        List<ResponseArticle> articleResponse = articleService.findByTitle("My Article");
+//
+//        //Assert
+//        Assertions.assertThat(articleResponse).isNotNull();
+//        Assertions.assertThat(articleResponse.size()).isEqualTo(1);
+//    }
+@Test
+public void ArticleService_FindByTitle_ReturnArticle() {
+    Article article = Article
+            .builder()
+            .title("My Article")
+            .content("My Content")
+            .photo("")
+            .build();
+    when(articleRepository.findAll()).thenReturn(List.of(article));
+    when(articleMapper.map(any(Article.class), Mockito.eq(ResponseArticle.class)))
+            .thenReturn(ResponseArticle.builder().title("My Article").content("My Content").photo("").build());
+    //Act
+    List<ResponseArticle> articleResponse = articleService.findByTitle(article.getTitle());
 
-        //Assert
-        Assertions.assertThat(articleResponse).isNotNull();
-        Assertions.assertThat(articleResponse.size()).isEqualTo(1);
-    }
-
+    //Assert
+    Assertions.assertThat(articleResponse).isNotNull();
+    Assertions.assertThat(articleResponse.size()).isEqualTo(1);
+}
     @Test
     public void ArticleService_Update_ReturnArticle() {
         //Arrange
@@ -211,21 +230,18 @@ class ArticleServiceTest {
         //Arrange
         Article article = Article
                 .builder()
+                .id(1L)
                 .title("My Article")
                 .content("My Content")
                 .photo("")
+                .comments(new HashSet<>())
                 .build();
-        ResponseArticle responseArticle = ResponseArticle
-                .builder()
-                .title("My Article")
-                .content("My Content")
-                .photo("")
-                .build();
-        when(articleMapper.map(any(Article.class), any())).thenReturn(responseArticle);
+        when(articleRepository.findById(any())).thenReturn(Optional.of(article));
+        when(articleRepository.save(any())).thenReturn(article);
+        doNothing().when(articleRepository).delete(any());
         //Act
-        ResponseArticle articleResponse = articleService.findById(1L);
-
+        ResponseArticle responseArticle = articleService.deleteArticle(1L);
         //Assert
-        assertNotNull(articleResponse);
+        Assertions.assertThat(responseArticle).isNull();
     }
 }

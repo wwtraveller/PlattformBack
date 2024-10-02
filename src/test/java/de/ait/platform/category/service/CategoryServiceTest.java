@@ -113,7 +113,10 @@ public void init(){
     @Test
     void delete() {
         // Arrange
-        Category category = Category.builder().name("Music").build();
+        Category category = Category
+                .builder()
+                .name("Music")
+                .build();
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
         Mockito.doNothing().when(categoryRepository).deleteById(1L);
         // Act

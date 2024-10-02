@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-@AllArgsConstructor
+
 @Service
 public class CategoryServiceImp implements CategoryService {
     private final ModelMapper mapper;

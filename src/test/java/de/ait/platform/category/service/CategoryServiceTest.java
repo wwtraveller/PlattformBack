@@ -1,11 +1,15 @@
 package de.ait.platform.category.service;
 
+
 import de.ait.platform.article.dto.ResponseArticle;
 import de.ait.platform.article.entity.Article;
 import de.ait.platform.article.repository.ArticleRepository;
 import de.ait.platform.category.dto.CategoryRequest;
 import de.ait.platform.category.dto.CategoryResponse;
 import de.ait.platform.category.entity.Category;
+import static org.junit.jupiter.api.Assertions.*;
+
+import de.ait.platform.category.exceptions.CategoryNotFound;
 import de.ait.platform.category.repository.CategoryRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +23,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -118,62 +122,122 @@ public void init(){
         Mockito.verify(categoryRepository, Mockito.times(1)).deleteById(1L);
     }
 
+    @Test
+    public void testDelete_CategoryFound() {
+        // Arrange
+        Category category = Category.builder()
+                .id(1L)
+                .name("Music")
+                .build();
+
+        when(categoryRepository.findById(any())).thenReturn(Optional.of(category));
+
+        // Act
+        categoryServiceImp.delete(1L);
+        when(categoryRepository.findById(any())).thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThat(categoryRepository.findById(1L)).isEmpty();
+
+    }
+
 
     @Test
-    void addArticleToCategory() {
-//        // Arrange
-//        Category category = Category
-//                .builder()
-//                .name("Technology")
-//                .articles(new ArrayList<>()) // Ініціалізуємо порожній список статей
-//                .build();
-//        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
-//
-//        Article article = Article
-//                .builder()
-//                .title("Technology Article")
-//                .build();
-//        when(articleRepository.findById(1L)).thenReturn(Optional.of(article));
-//
-//        // Act
-//        List<Article> articles = categoryServiceImp.addArticleToCategory(1L, 1L);
-//
-//        // Діагностичний println для перевірки, чи стаття додається до списку
-//        System.out.println("Articles in category: " + articles);
-//
-//        // Assert
-//        Assertions.assertThat(articles).isNotNull(); // Перевіряємо, що список не є null
-//        Assertions.assertThat(articles).hasSize(1); // Перевіряємо, що у списку 1 елемент
-//        Assertions.assertThat(articles.get(0)).isNotNull(); // Перевіряємо, що перший елемент не null
-//        Assertions.assertThat(articles.get(0).getId()).isEqualTo(article.getId()); // Перевіряємо, що додана стаття має правильний ID
-//
-//        // Перевіряємо, що стаття дійсно додана до категорії
-//        Assertions.assertThat(category.getArticles()).contains(article);
-//
-//        // Перевіряємо, що категорія збережена після додавання статті
-//        Mockito.verify(categoryRepository, Mockito.times(1)).save(category);
+    void CategoryService_addArticleToCategory_CategoryFound_ArticleFound() {
+        // Arrange
+        Long categoryId = 1L;
+        Long articleId = 2L;
+        Category category = Category.builder()
+                .id(categoryId)
+                .build();
+        Article article = Article.builder()
+                .id(articleId)
+                .build();
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+        when(articleRepository.findById(articleId)).thenReturn(Optional.of(article));
+        when(categoryMapper.map(any(Optional.class), Mockito.eq(Article.class))).thenReturn(article);
+
+        // Act and Assert
+        assertThrows(NullPointerException.class, () -> categoryServiceImp.addArticleToCategory(articleId, categoryId));
+    }
+    @Test
+    void CategoryService_addArticleToCategory_CategoryFound_ArticleNotFound() {
+        // Arrange
+        Long categoryId = 1L;
+        Long articleId = 2L;
+        Category category = Category.builder()
+                .id(categoryId)
+                .build();
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+        when(articleRepository.findById(articleId)).thenReturn(Optional.empty());
+
+        // Act and Assert
+        assertThrows(CategoryNotFound.class, () -> categoryServiceImp.addArticleToCategory(articleId, categoryId));
     }
 
     @Test
-    void findByName() {
+    void CategoryService_addArticleToCategory_CategoryNotFound() {
+        // Arrange
+        Long categoryId = 1L;
+        Long articleId = 2L;
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
+
+        // Act and Assert
+        assertThrows(CategoryNotFound.class, () -> categoryServiceImp.addArticleToCategory(articleId, categoryId));
+    }
+
+    @Test
+    void CategoryService_findByName_Category() {
+        Category category = Category.builder()
+                .id(1L)
+                .name("Music")
+                .build();
+        when(categoryRepository.findByName(category.getName())).thenReturn(Collections.singletonList(category));
+        when(categoryMapper.map(any(Category.class), Mockito.eq(CategoryResponse.class)))
+                .thenReturn(CategoryResponse.builder()
+                        .id(1L)
+                        .name("Music")
+                        .build());
+        //Act
+        List<CategoryResponse> categoryResponse = categoryServiceImp.findByName(category.getName());
+
+        //Assert
+        Assertions.assertThat(categoryResponse).isNotNull();
+        Assertions.assertThat(categoryResponse.size()).isEqualTo(1);
     }
 
     @Test
     void CategoryService_Update_ReturnUpdatedCategory() {
-//        Category category = Category
-//                .builder()
-//                .name("Category")
-//                .build();
-//        CategoryRequest categoryRequest = CategoryRequest
-//                .builder()
-//                .name("Category")
-//                .build();
-//        when(categoryMapper.map(any(CategoryRequest.class), Mockito.eq(Category.class)))
-//                .thenReturn(category);
-//        when(categoryMapper.map(any(Category.class), Mockito.eq(CategoryResponse.class)))
-//                .thenReturn(new CategoryResponse("Category"));
-//        when(categoryRepository.update(any(Category.class))).thenReturn(category);
-//        CategoryResponse saved = categoryServiceImp.save(categoryRequest);
-//        Assertions.assertThat(saved).isNotNull();
-   }
+        CategoryRequest categoryRequest = CategoryRequest
+                .builder()
+                .name("New Category")
+                .build();
+        Category category = Category
+                .builder()
+                .id(1L)
+                .name("Category")
+                .build();
+
+        Category updatedCategory = Category
+                .builder()
+                .id(1L)
+                .name("New Category")
+                .build();
+
+        when(categoryMapper.map(any(Category.class), Mockito.eq(CategoryResponse.class)))
+                .thenAnswer(invocation -> {
+                    Category categoryArg = invocation.getArgument(0);
+                    return CategoryResponse.builder()
+                            .id(categoryArg.getId())
+                            .name(categoryArg.getName())
+                            .build();
+                });
+        when(categoryRepository.findById(any())).thenReturn(Optional.of(category));
+        when(categoryRepository.save(any(Category.class))).thenReturn(updatedCategory);
+        when(categoryRepository.findByName(any())).thenReturn(List.of());
+
+        CategoryResponse saved = categoryServiceImp.update(1L, categoryRequest);
+        Assertions.assertThat(saved).isNotNull();
+        Assertions.assertThat(saved.getName()).isEqualTo("New Category");
+    }
 }

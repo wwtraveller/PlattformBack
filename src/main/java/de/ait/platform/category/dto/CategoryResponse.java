@@ -10,7 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
 @Schema(description = "DTO for category response")
 public class CategoryResponse {
 

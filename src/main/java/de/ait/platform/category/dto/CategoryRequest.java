@@ -7,7 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Builder
 @Setter
 @Schema(description = "DTO for creating or updating a category")
 public class CategoryRequest {

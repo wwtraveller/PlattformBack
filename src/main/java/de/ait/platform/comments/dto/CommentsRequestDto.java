@@ -1,6 +1,7 @@
 package de.ait.platform.comments.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @NoArgsConstructor

@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.List;
-
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -22,4 +22,7 @@ public class CategoryResponse {
 
     @Schema(description = "List of articles associated with the category")
     private List<Article> articles;
+
+    public CategoryResponse(String category) {
+    }
 }

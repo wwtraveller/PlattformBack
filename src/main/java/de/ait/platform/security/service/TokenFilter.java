@@ -35,7 +35,7 @@ public class TokenFilter extends GenericFilterBean {
         filterChain.doFilter(request, response);
     }
 
-    private String getTokenFromRequest(HttpServletRequest request) {
+    public String getTokenFromRequest(HttpServletRequest request) {
         if (request != null) {
             String token = request.getHeader("Authorization");
             if (token != null && token.startsWith("Bearer")) {

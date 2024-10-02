@@ -36,7 +36,7 @@ public class ArticleServiceImp implements ArticleService {
 
     @Transactional
     @Override
-    public List<ResponseArticle> fingAll() {
+    public List<ResponseArticle> findAll() {
         List<Article> list = repository.findAll();
         return list.stream()
                 .map(article -> mapper.map(article, ResponseArticle.class))
@@ -45,7 +45,7 @@ public class ArticleServiceImp implements ArticleService {
 
     @Transactional
     @Override
-    public ResponseArticle fingById(Long id) {
+    public ResponseArticle findById(Long id) {
         Optional<Article> article = repository.findById(id);
         if (article.isPresent()) {
             return mapper.map(article.get(), ResponseArticle.class);
@@ -57,7 +57,7 @@ public class ArticleServiceImp implements ArticleService {
 
     @Transactional
     @Override
-    public List<ResponseArticle> fingByTitle(String title) {
+    public List<ResponseArticle> findByTitle(String title) {
 
         if (title == null || title.isEmpty()) {
             throw new FieldCannotBeNull("Article with title: " + title + " not found");
@@ -68,6 +68,7 @@ public class ArticleServiceImp implements ArticleService {
         Predicate<Article> predicateByTitle =
                 (title.equals("")) ? a-> true:  article -> article.getTitle().equalsIgnoreCase(title);
         List<Article> articleList = repository.findAll().stream().filter(predicateByTitle).toList();
+        System.out.println(articleList);
         if (articleList.isEmpty()) {
             throw new ArticleNotFound("Article with title: " + title + " not found");
         }
@@ -128,7 +129,9 @@ public class ArticleServiceImp implements ArticleService {
     @Transactional
     @Override
     public ResponseArticle updateArticle(Long id, RequestArticle dto) {
-
+//        if (fingByTitle(dto.getTitle()).if) {
+//            throw new FieldIsTaken("That title already exist");
+//        }
         Article existingArticle = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Article not found with id: " + id));
 
@@ -169,19 +172,24 @@ public class ArticleServiceImp implements ArticleService {
     @Override
     public ResponseArticle deleteArticle(Long id) {
         Optional<Article> foundedArticle = repository.findById(id);
-        if (foundedArticle.isPresent()) {
-            Set<Comment> comments = foundedArticle.get().getComments();
-            for (Comment comment : comments) {
-                comment.setArticle(null);
-                comment.setUser(null);
+        if (foundedArticle.isPresent()){
+            if (foundedArticle.get().getComments() != null && !foundedArticle.get().getComments().isEmpty()){
+                for (Comment comment : foundedArticle.get().getComments()) {
+                    comment.setArticle(null);
+                    comment.setUser(null);
+                }
+                foundedArticle.get().setComments(new HashSet<>());
+                try {
+                    repository.deleteById(id);
+                } catch (Exception e) {
+                    throw new RuntimeException("Error deleting article with id: " + id, e);
+                }
             }
-            foundedArticle.get().setComments(new HashSet<>());
-            repository.deleteById(id);
-            return mapper.map(foundedArticle, ResponseArticle.class);
         }
         else {
             throw new ArticleNotFound("Article with id: " + id + "not found");
         }
 
+        return mapper.map(foundedArticle, ResponseArticle.class);
     }
 }

@@ -166,14 +166,14 @@ public class ArticleServiceImp implements ArticleService {
                     throw new CategoryNotFound("Category with id: " + number + " not found");
                 }
             }}
-            if (dto.getPhoto() != null && !dto.getPhoto().isEmpty()) {
-                existingArticle.setPhoto(dto.getPhoto());
-            }
-
-            Article updatedArticle = repository.save(existingArticle);
-
-            return mapper.map(updatedArticle, ResponseArticle.class);
+        if (dto.getPhoto() != null && !dto.getPhoto().isEmpty()) {
+            existingArticle.setPhoto(dto.getPhoto());
         }
+
+        Article updatedArticle = repository.save(existingArticle);
+
+        return mapper.map(updatedArticle, ResponseArticle.class);
+    }
 
 
     @Transactional

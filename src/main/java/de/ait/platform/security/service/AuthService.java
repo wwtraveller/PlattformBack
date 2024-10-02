@@ -40,6 +40,7 @@ public class AuthService {
             throw new CustomAuthException("User not found");
         }
 
+
         if (foundUser != null && passwordEncoder.matches(inboundUser.getPassword(), foundUser.getPassword())) {
             String accessToken = tokenService.generateAccessToken(foundUser);
             String refreshToken = tokenService.generateRefreshToken(foundUser);

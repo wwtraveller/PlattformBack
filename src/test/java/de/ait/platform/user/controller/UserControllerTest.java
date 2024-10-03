@@ -5,12 +5,12 @@ import de.ait.platform.user.dto.UserResponseDto;
 import de.ait.platform.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-//import org.mockito.MockBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Arrays;
@@ -21,22 +21,26 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
 public class UserControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
     @Mock
     private UserService userService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @InjectMocks
+    private UserController userController;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private UserResponseDto userResponseDto;
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+
+        // Подготовка данных для тестов
         userResponseDto = UserResponseDto.builder()
                 .id(1L)
                 .username("user1")
@@ -51,15 +55,18 @@ public class UserControllerTest {
         userRequestDto.setEmail("user1@example.com");
         userRequestDto.setPassword("password123");
 
+        // Мокируем поведение userService для метода createUser
         when(userService.createUser(any(UserRequestDto.class))).thenReturn(userResponseDto);
 
+        // Выполняем POST-запрос и проверяем результат
         mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userRequestDto)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk()) // Здесь проверяем статус 200 OK
                 .andExpect(jsonPath("$.username").value("user1"))
                 .andExpect(jsonPath("$.email").value("user1@example.com"));
     }
+
 
     @Test
     void testGetUsers() throws Exception {

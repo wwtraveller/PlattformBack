@@ -155,22 +155,6 @@ class AuthServiceTest {
         assertThrows(InvalidPasswordException.class, () -> authService.login(inboundUser));
     }
 
-    @AfterEach
-    void tearDown() {
-    }
-
-    @Test
-    void login() {
-    }
-
-    @Test
-    void getNewAccessToken() {
-    }
-
-    @Test
-    void getAuthenticatedUser() {
-    }
-
     @Test
     public void getNewAccessToken_ValidRefreshToken_ReturnsTokenResponseDto() throws CustomAuthException {
         // Arrange

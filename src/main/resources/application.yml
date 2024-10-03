@@ -22,3 +22,8 @@ key:
   access: ${ACCESS_KEY}
   refresh: ${REFRESH_KEY}
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+

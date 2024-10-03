@@ -6,7 +6,7 @@ spring:
   application:
     name: platform
   datasource:
-    url: jdbc:postgresql://localhost:5432/PLATFORM
+    url: jdbc:postgresql://localhost:5432/platform
     username: postgres
     password: qwerty007
     driver-class-name: org.postgresql.Driver

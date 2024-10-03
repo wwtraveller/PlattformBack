@@ -2,7 +2,7 @@ package de.ait.platform.role.service;
 
 
 import de.ait.platform.role.entity.Role;
-import de.ait.platform.role.reposittory.RoleRepository;
+import de.ait.platform.role.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

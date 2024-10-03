@@ -1,7 +1,7 @@
 package de.ait.platform.security.service;
 
 import de.ait.platform.role.entity.Role;
-import de.ait.platform.role.reposittory.RoleRepository;
+import de.ait.platform.role.repository.RoleRepository;
 import de.ait.platform.security.entity.AuthInfo;
 import de.ait.platform.user.entity.User;
 import io.jsonwebtoken.Claims;

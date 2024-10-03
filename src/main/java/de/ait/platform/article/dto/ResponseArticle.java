@@ -4,10 +4,7 @@ import de.ait.platform.category.entity.Category;
 import de.ait.platform.comments.entity.Comment;
 import de.ait.platform.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -15,6 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Schema(description = "DTO for the response containing article details")
 public class ResponseArticle {
 

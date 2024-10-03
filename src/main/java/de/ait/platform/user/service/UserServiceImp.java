@@ -4,23 +4,33 @@ package de.ait.platform.user.service;
 import de.ait.platform.role.entity.Role;
 import de.ait.platform.role.service.RoleService;
 import de.ait.platform.user.dto.UserLoginDto;
+import de.ait.platform.user.dto.UserPhotoUrlDto;
 import de.ait.platform.user.dto.UserRequestDto;
 import de.ait.platform.user.dto.UserResponseDto;
 import de.ait.platform.user.entity.User;
 import de.ait.platform.user.exceptions.UserNotFound;
 import de.ait.platform.user.reposittory.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 @Service
@@ -30,6 +40,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     private final ModelMapper mapper;
     private final RoleService roleService;
     private final BCryptPasswordEncoder encoder;
+    private static final Set<String> ALLOWED_EXTENSIONS = Set.of("jpg", "jpeg", "png", "gif");
 
 
     @Transactional
@@ -163,5 +174,78 @@ public class UserServiceImp implements UserService, UserDetailsService {
         return repository.existsByEmail(email);
 
     }
+
+
+
+    @Transactional
+    @Override
+    public String addPhotoByUrl(UserPhotoUrlDto photoUrl) {
+        User currentUser = loadCurrentUser(); // Получаем текущего пользователя
+        currentUser.setPhoto(String.valueOf(photoUrl)); // Обновляем URL фото
+        repository.save(currentUser); // Сохраняем изменения
+        return "Photo URL added: " + photoUrl;
+    }
+    private User loadCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+            return repository.findUserByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        }
+        throw new RuntimeException("No authenticated user found");
+    }
+
+    @Transactional
+    @Override
+    public String addPhotoByFile(MultipartFile photoFile) {
+        User currentUser = loadCurrentUser(); // Получаем текущего пользователя
+
+        // Логика сохранения файла на сервере
+        String filePath = saveFile(photoFile); // Метод сохранения файла
+        currentUser.setPhoto(filePath); // Обновляем URL фото
+        repository.save(currentUser); // Сохраняем изменения
+
+        return "Photo added: " + filePath;
+    }
+
+    private String saveFile(MultipartFile file) {
+        // Проверка, что файл не пустой
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("Cannot save empty file");
+        }
+
+        // Получение оригинального имени файла
+        String originalFileName = file.getOriginalFilename();
+        if (originalFileName == null) {
+            throw new IllegalArgumentException("File name cannot be null");
+        }
+
+        // Проверка расширения файла
+        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
+        if (!ALLOWED_EXTENSIONS.contains(fileExtension)) {
+            throw new IllegalArgumentException("File type not allowed: " + fileExtension);
+        }
+
+        // Генерация уникального имени файла для избежания конфликтов
+        String uniqueFileName = UUID.randomUUID().toString() + "_" + originalFileName;
+
+        // Определение пути для сохранения файла
+
+        String directoryPath = "https://drive.google.com/drive/folders/1Ucbre_N_NUSEBJ7jxVa2DysuRzXPTi8C"; // Убедитесь, что путь существует
+        Path filePath = Paths.get(directoryPath + uniqueFileName);
+
+        try {
+            // Создание директории, если она не существует
+            Files.createDirectories(filePath.getParent());
+
+            // Сохранение файла
+            file.transferTo(filePath.toFile());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save file: " + e.getMessage());
+        }
+
+        return filePath.toString(); // Возвращаем полный путь к файлу
+    }
+
 }
 

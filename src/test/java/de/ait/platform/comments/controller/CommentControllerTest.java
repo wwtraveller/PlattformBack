@@ -89,7 +89,7 @@ public class CommentControllerTest {
         mockMvc.perform(post("/api/comments")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
-                        .andExpect(status().isOk()) // Ось тут перевіряємо статус 201
+                        .andExpect(status().isCreated()) // Ось тут перевіряємо статус 201
                         .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.text").value("Test content"));
     }
@@ -119,10 +119,9 @@ public class CommentControllerTest {
         mockMvc.perform(put("/api/comments/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentRequestDto)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.text").value(commentResponseDto.getText()));
     }
-
 
     @Test
     public void CommentController_DeleteComment_ReturnSuccess() throws Exception {

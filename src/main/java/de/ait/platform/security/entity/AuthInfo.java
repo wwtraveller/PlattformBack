@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 
+
 @Getter
 public class AuthInfo implements Authentication {
     private boolean authenticated;

@@ -1,4 +1,4 @@
-package de.ait.platform.role.reposittory;
+package de.ait.platform.role.repository;
 
 import de.ait.platform.role.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;

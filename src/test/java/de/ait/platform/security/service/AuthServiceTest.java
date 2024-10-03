@@ -1,5 +1,6 @@
 package de.ait.platform.security.service;
 
+import de.ait.platform.security.dto.RefreshRequestDto;
 import de.ait.platform.security.dto.TokenResponseDto;
 import de.ait.platform.security.exception.CustomAuthException;
 import de.ait.platform.security.exception.InvalidPasswordException;
@@ -12,6 +13,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.impl.DefaultClaims;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,18 +45,20 @@ class AuthServiceTest {
     private UserService userService;
     @Mock
     private BCryptPasswordEncoder passwordEncoder;
+
     @Mock
     private ModelMapper mapper;
 
     @Mock
     private Authentication authentication;
-    private Map<String, String> refreshTokenStorage;
+
     private AuthService authService;
+    private RefreshRequestDto refreshRequest;
 
 
     @BeforeEach
     public void init() {
-        refreshTokenStorage = new HashMap<>();
+        MockitoAnnotations.openMocks(this);
         authentication = Mockito.mock(Authentication.class);
         userService = Mockito.mock(UserService.class);
         tokenService = Mockito.mock(TokenService.class);
@@ -68,13 +74,20 @@ class AuthServiceTest {
     @Test
     public void login_ValidUser_ReturnsTokenResponseDto() throws CustomAuthException {
         // Arrange
-        UserLoginDto inboundUser  = new UserLoginDto("username", "password");
+        UserLoginDto inboundUser = new UserLoginDto("username", "password");
+
+        // Mock the user that would be found by the user service
         User foundUser = User.builder()
                 .username("username")
                 .password("password")
                 .build();
+
         when(userService.loadUserByUsername(inboundUser.getUsername())).thenReturn(foundUser);
+
+        // Mock password matching logic
         when(passwordEncoder.matches(inboundUser.getPassword(), foundUser.getPassword())).thenReturn(true);
+
+        // Mock token generation
         String accessToken = "access-token";
         String refreshToken = "refresh-token";
         when(tokenService.generateAccessToken(foundUser)).thenReturn(accessToken);
@@ -88,11 +101,10 @@ class AuthServiceTest {
         assertEquals(accessToken, result.getAccessToken());
         assertEquals(refreshToken, result.getRefreshToken());
 
-        // Verify that the refresh token is stored in the refresh token storage
-        Map<String, String> refreshTokenStorageSpy = Mockito.spy(refreshTokenStorage);
-        when(refreshTokenStorageSpy.get(accessToken)).thenReturn(refreshToken);
-        assertEquals(refreshToken, refreshTokenStorageSpy.get(accessToken));
+        // Verify that the refresh token is stored
+        verify(tokenService, times(1)).generateRefreshToken(foundUser);
     }
+
     @Test
     public void login_InvalidUser_ThrowsCustomAuthException() throws CustomAuthException {
         // Arrange
@@ -143,87 +155,117 @@ class AuthServiceTest {
         assertThrows(InvalidPasswordException.class, () -> authService.login(inboundUser));
     }
 
-//    @Test
-//    public void getNewAccessToken_ValidRefreshToken_ReturnsTokenResponseDto() throws CustomAuthException {
-//        // Arrange
-//        String inboundRefreshToken = "refresh-token";
-//        Claims claims = mock(Claims.class);
-//        when(claims.getSubject()).thenReturn("username");
-//        when(tokenService.getRefreshClaims(anyString())).thenReturn(claims);
-//        String savedRefreshToken = "refresh-token";
-//        when(refreshTokenStorage.get("username")).thenReturn(savedRefreshToken);
-//        User foundUser  = User.builder()
-//                .username("username")
-//                .password("password")
-//                .build();
-//        when(userService.loadUserByUsername("username")).thenReturn(foundUser );
-//        String accessToken = "access-token";
-//        when(tokenService.generateAccessToken(foundUser )).thenReturn(accessToken);
-//
-//        // Act
-//        TokenResponseDto result = authService.getNewAccessToken(inboundRefreshToken);
-//
-//        // Assert
-//        assertNotNull(result);
-//        assertEquals(accessToken, result.getAccessToken());
-//        assertNull(result.getRefreshToken());
-//    }
+    @Test
+    public void getNewAccessToken_ValidRefreshToken_ReturnsTokenResponseDto() throws CustomAuthException {
+        // Arrange
+        String inboundRefreshToken = "valid-refresh-token";
 
-//    @Test
-//    public void getNewAccessToken_InvalidRefreshToken_ThrowsCustomAuthException() throws CustomAuthException {
-//        // Arrange
-//        String inboundRefreshToken = "refresh-token";
-//        Claims refreshClaims = Jwts.claims().setSubject("username").build();
-//        when(tokenService.getRefreshClaims(inboundRefreshToken)).thenReturn(refreshClaims);
-//        String savedRefreshToken = "invalid-refresh-token";
-//        when(refreshTokenStorage.get("username")).thenReturn(savedRefreshToken);
-//
-//        // Act and Assert
-//        assertThrows(CustomAuthException.class, () -> authService.getNewAccessToken(inboundRefreshToken));
-//    }
+        // Создаем реальные Claims и устанавливаем subject (имя пользователя)
+        Claims claims = Jwts.claims().setSubject("username").build();
+        when(tokenService.getRefreshClaims(inboundRefreshToken)).thenReturn(claims);
 
-//    @Test
-//    public void getNewAccessToken_NullRefreshToken_ThrowsCustomAuthException() throws CustomAuthException {
-//        // Act and Assert
-//        assertThrows(CustomAuthException.class, () -> authService.getNewAccessToken(null));
-//    }
+        // Добавляем токен в хранилище refresh токенов для пользователя
+        String savedRefreshToken = "valid-refresh-token";
+        authService.refreshTokenStorage.put("username", savedRefreshToken);  // Доступ напрямую
 
-//    @Test
-//    public void getNewAccessToken_RefreshTokenStorageReturnsNull_ThrowsCustomAuthException() throws CustomAuthException {
-//        // Arrange
-//        String inboundRefreshToken = "refresh-token";
-//        Claims refreshClaims = Jwts.claims().setSubject("username").build();
-//        when(tokenService.getRefreshClaims(inboundRefreshToken)).thenReturn(refreshClaims);
-//        when(refreshTokenStorage.get("username")).thenReturn(null);
-//
-//        // Act and Assert
-//        assertThrows(CustomAuthException.class, () -> authService.getNewAccessToken(inboundRefreshToken));
-//    }
+        // Имитация загрузки пользователя через userService
+        User foundUser = User.builder()
+                .username("username")
+                .password("password")
+                .build();
+        when(userService.loadUserByUsername("username")).thenReturn(foundUser);
 
-//    @Test
-//    public void testGetAuthenticatedUser () {
-//        // Create a mock UserResponseDto object
-//        UserResponseDto userResponseDto = UserResponseDto.builder()
-//                .id(1L)
-//                .email("email")
-//                .username("test-username")
-//                .build();
-//
-//
-//        // Create a mock Authentication object
-//        when(authentication.getPrincipal()).thenReturn(userResponseDto);
-//
-//        // Create a mock SecurityContext object
-//        SecurityContext securityContext = mock(SecurityContext.class);
-//        when(securityContext.getAuthentication()).thenReturn(authentication);
-//
-//        // Set the mock SecurityContext in the SecurityContextHolder
-//        SecurityContextHolder.setContext(securityContext);
-//
-//        // Call the method you want to test
-//        UserResponseDto result = authService.getAuthenticatedUser ();
-//        System.out.println(result);
-//        // Verify the result
-//        Assertions.assertThat(result.getUsername()).isEqualTo("test-username");
-//    }
+        // Генерация access токена
+        String accessToken = "new-access-token";
+        when(tokenService.generateAccessToken(foundUser)).thenReturn(accessToken);
+
+        // Act
+        TokenResponseDto result = authService.getNewAccessToken(inboundRefreshToken);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(accessToken, result.getAccessToken());
+        assertNull(result.getRefreshToken());  // Проверяем, что refresh токен не генерируется заново
+    }
+
+    @Test
+    public void getNewAccessToken_InvalidRefreshToken_ThrowsCustomAuthException() {
+        // Arrange
+        String inboundRefreshToken = "invalid-refresh-token";
+
+        // Создаем реальные Claims и устанавливаем subject (имя пользователя)
+        Claims claims = Jwts.claims().setSubject("username").build();
+        when(tokenService.getRefreshClaims(inboundRefreshToken)).thenReturn(claims);
+
+        // Добавляем другой токен в хранилище refresh токенов для пользователя
+        String savedRefreshToken = "valid-refresh-token";
+        authService.refreshTokenStorage.put("username", savedRefreshToken);  // Доступ напрямую
+
+        // Act & Assert
+        assertThrows(CustomAuthException.class, () -> authService.getNewAccessToken(inboundRefreshToken));
+    }
+
+
+    @Test
+    public void getNewAccessToken_NullRefreshToken_ThrowsCustomAuthException() {
+        // Act & Assert: проверка выброса CustomAuthException при null-токене
+        assertThrows(CustomAuthException.class, () -> authService.getNewAccessToken(null));
+    }
+
+    @Test
+    public void getNewAccessToken_RefreshTokenStorageReturnsNull_ThrowsCustomAuthException() {
+        // Arrange
+        String inboundRefreshToken = "refresh-token";
+
+        // Создаем реальные Claims и устанавливаем subject (имя пользователя)
+        Claims claims = Jwts.claims().setSubject("username").build();
+        when(tokenService.getRefreshClaims(inboundRefreshToken)).thenReturn(claims);
+
+        // Здесь не добавляем ничего в refreshTokenStorage, чтобы он возвращал null для пользователя
+        authService.refreshTokenStorage.remove("username"); // Убеждаемся, что хранилище пустое
+
+        // Act & Assert
+        assertThrows(CustomAuthException.class, () -> authService.getNewAccessToken(inboundRefreshToken));
+    }
+
+    @Test
+    public void getAuthenticatedUser_ReturnsUserResponseDto() {
+        // Arrange
+        String username = "test-username";
+
+        // Мокируем пользователя, который должен вернуться через userService
+        User foundUser = User.builder()
+                .username(username)
+                .password("password")
+                .build();
+
+        // Мокируем UserResponseDto, который будет возвращен после маппинга
+        UserResponseDto userResponseDto = UserResponseDto.builder()
+                .username(username)
+                .email("test@example.com")
+                .build();
+
+        // Мокируем Authentication, чтобы возвращать имя пользователя
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(username);
+
+        // Мокируем SecurityContext и задаем ему аутентификацию
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        // Мокируем загрузку пользователя через userService
+        when(userService.loadUserByUsername(username)).thenReturn(foundUser);
+
+        // Мокируем маппинг с помощью ModelMapper
+        when(mapper.map(foundUser, UserResponseDto.class)).thenReturn(userResponseDto);
+
+        // Act: вызываем метод для получения аутентифицированного пользователя
+        UserResponseDto result = authService.getAuthenticatedUser();
+
+        // Assert: проверяем, что полученный результат содержит ожидаемые значения
+        assertNotNull(result);
+        assertEquals(username, result.getUsername());  // Проверяем, что username соответствует "test-username"
+        assertEquals("test@example.com", result.getEmail());  // Проверяем email
+    }
 }

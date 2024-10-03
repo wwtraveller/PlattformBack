@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   application:
     name: platform
   datasource:
@@ -27,3 +31,4 @@ spring:
 key:
   access: Qiv2P1iotfT2jbZ/BoxzqmeoQ0jZSpFRoNbtl8fdA7U=
   refresh: 5paNuOHQTD/J9D6pcJvZfu+rqgqaCCZNZQrgmXdSo8c=
+

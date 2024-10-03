@@ -65,6 +65,7 @@ public class ArticleController {
                             schema = @Schema(implementation = ResponseArticle.class))),
             @ApiResponse(responseCode = "404", description = "Article not found", content = @Content)
     })
+
     @PutMapping("/articles/{id}")
     public ResponseArticle updateArticle(@Parameter(description = "ID of the article to update") @PathVariable Long id,
                                          @RequestBody RequestArticle article) {

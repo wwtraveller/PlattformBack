@@ -22,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class ArticleController {
+
     private final ArticleService service;
 
     @Operation(summary = "Get article by ID", description = "Retrieves an article by its ID")

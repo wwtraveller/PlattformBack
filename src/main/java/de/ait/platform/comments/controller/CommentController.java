@@ -19,7 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class CommentController {
-@Autowired
+
+    @Autowired
     private final CommentsService commentsService;
 
     @Operation(summary = "Get all comments", description = "Retrieves a list of all comments")

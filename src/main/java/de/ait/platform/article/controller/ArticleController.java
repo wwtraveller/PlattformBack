@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,10 +48,15 @@ public class ArticleController {
                             schema = @Schema(implementation = ResponseArticle.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
     })
-    @PostMapping("/articles")
-    public ResponseArticle addArticle(@RequestBody RequestArticle article) {
-            return service.createArticle(article);
+    @PostMapping("/api/articles")
+    public ResponseEntity<ResponseArticle> addArticle(@RequestBody RequestArticle requestArticle) {
+        ResponseArticle responseArticle = service.createArticle(requestArticle);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseArticle);
     }
+//    @PostMapping("/articles")
+//    public ResponseArticle addArticle(@RequestBody RequestArticle article) {
+//            return service.createArticle(article);
+//    }
 
     @Operation(summary = "Update article by ID", description = "Updates an existing article")
     @ApiResponses(value = {

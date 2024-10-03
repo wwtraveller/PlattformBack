@@ -1,11 +1,16 @@
 package de.ait.platform.security.service;
 
+import de.ait.platform.article.exception.FieldCannotBeNull;
+import de.ait.platform.article.exception.FieldIsBlank;
+import de.ait.platform.article.exception.FieldIsTaken;
 import de.ait.platform.security.dto.TokenResponseDto;
 import de.ait.platform.security.exception.InvalidPasswordException;
+import de.ait.platform.user.dto.ChangePasswordDto;
 import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.user.dto.UserResponseDto;
 import de.ait.platform.user.entity.User;
 import de.ait.platform.security.exception.CustomAuthException;
+import de.ait.platform.user.reposittory.UserRepository;
 import de.ait.platform.user.service.UserService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +34,7 @@ public class AuthService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final ModelMapper mapper;
     final Map<String, String> refreshTokenStorage = new HashMap<>();
+    private final UserRepository userRepository;
 
     public TokenResponseDto login(UserLoginDto inboundUser) throws CustomAuthException {
         if(inboundUser == null || inboundUser.getUsername() == null || inboundUser.getPassword() == null) {
@@ -75,4 +82,26 @@ public class AuthService {
         User user = userService.loadUserByUsername(username);
         return mapper.map(user, UserResponseDto.class);
     }
+
+    public  UserResponseDto changePassword(ChangePasswordDto passwordDto){
+        UserResponseDto userDto = getAuthenticatedUser();
+
+//        if (passwordDto.getUsername().isBlank() || passwordDto.getOldPassword().isBlank() || passwordDto.getNewPassword().isBlank()) {
+            User user = userService.loadUserByUsername(passwordDto.getUsername());
+            if (Objects.equals(passwordDto.getUsername(), userDto.getUsername())){
+                if (passwordEncoder.matches(passwordDto.getOldPassword(), user.getPassword())){
+                    user.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+                    userRepository.save(user);
+                    return mapper.map(user, UserResponseDto.class);
+                }
+                else {
+                    throw new FieldIsTaken("Wrong password");
+                }
+            }
+            else {
+                throw new FieldIsBlank("Wrong username");
+            }
+        }
+//        else throw new FieldCannotBeNull("Username or old password cannot blank");
+
 }

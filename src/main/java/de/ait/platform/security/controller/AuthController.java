@@ -4,6 +4,7 @@ import de.ait.platform.security.dto.RefreshRequestDto;
 import de.ait.platform.security.dto.TokenResponseDto;
 import de.ait.platform.security.exception.CustomAuthException;
 import de.ait.platform.security.exception.InvalidPasswordException;
+import de.ait.platform.user.dto.ChangePasswordDto;
 import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.security.service.AuthService;
 import de.ait.platform.user.dto.UserResponseDto;
@@ -69,6 +70,8 @@ public class AuthController {
         return service.getAuthenticatedUser();
     }
 
-
-
+    @PutMapping("/changePassword")
+    public UserResponseDto changePassword(@RequestBody ChangePasswordDto passwordDto){
+        return service.changePassword(passwordDto);
+    }
 }

@@ -49,7 +49,7 @@ public class ArticleController {
                             schema = @Schema(implementation = ResponseArticle.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
     })
-    @PostMapping("/api/articles")
+    @PostMapping("/articles")
     public ResponseEntity<ResponseArticle> addArticle(@RequestBody RequestArticle requestArticle) {
         ResponseArticle responseArticle = service.createArticle(requestArticle);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseArticle);

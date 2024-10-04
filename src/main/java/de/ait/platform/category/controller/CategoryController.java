@@ -1,5 +1,6 @@
 package de.ait.platform.category.controller;
 
+import de.ait.platform.article.dto.ResponseArticle;
 import de.ait.platform.article.entity.Article;
 import de.ait.platform.category.dto.CategoryRequest;
 import de.ait.platform.category.dto.CategoryResponse;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,7 +31,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found", content = @Content)
     })
     @GetMapping("/categories/{id}")
-    public CategoryResponse getCategoryById(@Parameter(description = "ID of the category to retrieve") @PathVariable(name="id") Long id) {
+    public CategoryResponse getCategoryById(@Parameter(description = "ID of the category to retrieve") @PathVariable(name = "id") Long id) {
         return service.findById(id);
     }
 
@@ -89,11 +91,31 @@ public class CategoryController {
                             schema = @Schema(implementation = CategoryResponse.class)))
     })
     @GetMapping("/categories")
-    public List<CategoryResponse> getCategory(@RequestParam(name="title", required = false, defaultValue = "") String title) {
+    public List<CategoryResponse> getCategory(@RequestParam(name = "title", required = false, defaultValue = "") String title) {
         if (title.isEmpty()) {
             return service.findAll();
         } else {
             return service.findByName(title);
         }
+    }
+
+    @Operation(summary = "Find articles in a category by name and title", description = "Retrieves articles from a category by its name and article title")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Articles found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ResponseArticle.class))),
+            @ApiResponse(responseCode = "404", description = "Category or article not found", content = @Content)
+    })
+    @GetMapping("/categories/findarticles")
+    public List<ResponseArticle> findArticleInCategories(@RequestParam(name = "name") String categoryName,
+                                                         @RequestParam(name = "title") String articleTitle) {
+        List<ResponseArticle> foundedArticles = new ArrayList<>();
+        if (categoryName.isEmpty()) {
+            foundedArticles = service.findArticleInCategories(categoryName);
+        }
+        if (!categoryName.isBlank()) {
+        foundedArticles = service.findArticleInCategory(categoryName, articleTitle);
+        }
+     return foundedArticles;
     }
 }

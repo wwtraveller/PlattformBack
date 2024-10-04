@@ -2,20 +2,21 @@ package de.ait.platform.category.service;
 
 import de.ait.platform.article.dto.ResponseArticle;
 import de.ait.platform.article.entity.Article;
+import de.ait.platform.article.exception.FieldIsBlank;
 import de.ait.platform.article.repository.ArticleRepository;
 import de.ait.platform.category.dto.CategoryRequest;
 import de.ait.platform.category.dto.CategoryResponse;
 import de.ait.platform.category.entity.Category;
 import de.ait.platform.category.exceptions.CategoryNotFound;
 import de.ait.platform.category.repository.CategoryRepository;
-import de.ait.platform.role.entity.Role;
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -125,6 +126,42 @@ public class CategoryServiceImp implements CategoryService {
         Category updatedCategory = repository.save(existingCategory);
 
         return mapper.map(updatedCategory, CategoryResponse.class);
+    }
+@Transactional
+@Override
+    public List<ResponseArticle> findArticleInCategory(String name, String title){
+    List<ResponseArticle> foundedArticles = new ArrayList<>();
+    if(name.isEmpty()|| title.isEmpty()||name.isBlank()||title.isBlank()){
+        throw new FieldIsBlank("Title oder name is uncorrected");
+    }
+    List<CategoryResponse> categoryResponse = findByName(name);
+    for(CategoryResponse category : categoryResponse){
+        List<Article> articles = category.getArticles();
+        for(Article article : articles){
+            if(article.getTitle().equals(title)){
+                foundedArticles.add(mapper.map(article, ResponseArticle.class));
+            }
 
+        }
+    }
+    return foundedArticles;
+    }
+@Transactional
+    @Override
+    public List<ResponseArticle> findArticleInCategories( String title){
+        List<ResponseArticle> foundedArticles = new ArrayList<>();
+        if( title.isEmpty()||title.isBlank()){
+            throw new FieldIsBlank("Title oder name is uncorrected");
+        }
+        List<CategoryResponse> categoryResponse = findAll();
+        for(CategoryResponse category : categoryResponse){
+            List<Article> articles = category.getArticles();
+            for(Article article : articles){
+                if(article.getTitle().equals(title)){
+                    foundedArticles.add(mapper.map(article, ResponseArticle.class));
+                }
+            }
+        }
+        return foundedArticles;
     }
 }

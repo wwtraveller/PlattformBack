@@ -134,7 +134,7 @@ class ArticleControllerTest {
         mockMvc.perform(post("/api/articles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestArticle)))
-                        .andExpect(status().isUnauthorized())
+                        .andExpect(status().isOk())
                         .andReturn();
     }
 

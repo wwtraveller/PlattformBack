@@ -138,7 +138,7 @@ public class CategoryServiceImp implements CategoryService {
     for(CategoryResponse category : categoryResponse){
         List<Article> articles = category.getArticles();
         for(Article article : articles){
-            if(article.getTitle().equals(title)){
+            if(article.getTitle().contains(title)){
                 foundedArticles.add(mapper.map(article, ResponseArticle.class));
             }
 
@@ -157,7 +157,7 @@ public class CategoryServiceImp implements CategoryService {
         for(CategoryResponse category : categoryResponse){
             List<Article> articles = category.getArticles();
             for(Article article : articles){
-                if(article.getTitle().equals(title)){
+                if(article.getTitle().contains(title)){
                     foundedArticles.add(mapper.map(article, ResponseArticle.class));
                 }
             }

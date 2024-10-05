@@ -27,7 +27,7 @@ public class AuthService {
     private final UserService userService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final ModelMapper mapper;
-    private final Map<String, String> refreshTokenStorage = new HashMap<>();
+    final Map<String, String> refreshTokenStorage = new HashMap<>();
 
     public TokenResponseDto login(UserLoginDto inboundUser) throws CustomAuthException {
         if(inboundUser == null || inboundUser.getUsername() == null || inboundUser.getPassword() == null) {
@@ -39,6 +39,7 @@ public class AuthService {
             log.warn("User not found for username: {}", username);
             throw new CustomAuthException("User not found");
         }
+
 
         if (foundUser != null && passwordEncoder.matches(inboundUser.getPassword(), foundUser.getPassword())) {
             String accessToken = tokenService.generateAccessToken(foundUser);
@@ -52,9 +53,13 @@ public class AuthService {
     }
 
     public TokenResponseDto getNewAccessToken(String inboundRefreshToken) {
+        if (inboundRefreshToken == null) {
+            throw new CustomAuthException("Refresh token cannot be null");
+        }
         Claims refreshClaims = tokenService.getRefreshClaims(inboundRefreshToken);
         String username = refreshClaims.getSubject();
         String savedRefreshToken = refreshTokenStorage.get(username);
+
         if (savedRefreshToken != null && savedRefreshToken.equals(inboundRefreshToken)) {
             User foundUser = userService.loadUserByUsername(username);
             String accessToken = tokenService.generateAccessToken(foundUser);
@@ -66,8 +71,8 @@ public class AuthService {
 
     public UserResponseDto getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = (String) authentication.getPrincipal();
-        User user = userService.loadUserByUsername(userName);
+        String username = (String) authentication.getPrincipal();
+        User user = userService.loadUserByUsername(username);
         return mapper.map(user, UserResponseDto.class);
     }
 }

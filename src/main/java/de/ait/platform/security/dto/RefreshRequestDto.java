@@ -2,9 +2,12 @@ package de.ait.platform.security.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Objects;
 
 @Getter
+@Setter
 @Schema(description = "DTO for refresh token request")
 public class RefreshRequestDto {
 

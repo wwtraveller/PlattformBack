@@ -32,7 +32,7 @@ public class ArticleController {
     @GetMapping("/articles/{id}")
     public ResponseArticle findById(@Parameter(description = "ID of the article to retrieve") @PathVariable Long id) {
         try {
-            return service.fingById(id);
+            return service.findById(id);
         }
         catch (ArticleNotFound e){
             throw new ArticleNotFound("Article with id: " + id + " not found");
@@ -91,10 +91,10 @@ public class ArticleController {
     @GetMapping("/articles")
     public List<ResponseArticle> getArticle(@RequestParam(name="title", required = false, defaultValue = "") String title) {
         if (title.isEmpty()) {
-            return service.fingAll();
+            return service.findAll();
         }
         else {
-            return service.fingByTitle(title);
+            return service.findByTitle(title);
         }
     }
 

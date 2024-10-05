@@ -1,5 +1,7 @@
 package de.ait.platform.user.controller;
 
+import de.ait.platform.user.dto.UserPhotoFileDto;
+import de.ait.platform.user.dto.UserPhotoUrlDto;
 import de.ait.platform.user.dto.UserRequestDto;
 import de.ait.platform.user.dto.UserResponseDto;
 import de.ait.platform.user.service.UserService;
@@ -12,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.List;
 
@@ -106,6 +110,21 @@ public class UserController {
 
         return ResponseEntity.ok("Email is available");
     }
+
+    @Operation(summary = "Add a photo by URL")
+    @PostMapping("/users/photo/url")
+    public ResponseEntity<String> addPhotoByUrl(@RequestBody UserPhotoUrlDto photoUrlDto) {
+        String response = service.addPhotoByUrl(photoUrlDto);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Add a photo by file")
+    @PostMapping("/users/photo/file")
+    public ResponseEntity<String> addPhotoByFile(@RequestParam("photoFile") MultipartFile photoFile) {
+        String response = service.addPhotoByFile(photoFile);
+        return ResponseEntity.ok(response);
+    }
+
 }
 
 

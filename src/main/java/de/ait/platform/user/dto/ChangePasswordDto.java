@@ -9,12 +9,12 @@ import lombok.*;
 @Getter
 @Setter
 public class ChangePasswordDto {
-    @Schema(description = "User name", example = "john_doe")
-    private String username;
-
     @Schema(description = "old password", example = "pasSword123 ", minLength = 8)
     private String oldPassword;
 
-    @Schema(description = "new password", example = "pasSword123 ", minLength = 8)
+    @Schema(description = "new password", example = "pasSword125 ", minLength = 8)
     private String newPassword;
+
+    @Schema(description = "repeat", example = "pasSword125")
+    private String repeatPassword;
 }

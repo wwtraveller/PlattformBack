@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.3.3</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>de.ait</groupId>
     <artifactId>platform</artifactId>
@@ -131,10 +131,6 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
             <version>4.0.2</version>
         </dependency>
-        <!-- Убедитесь, что версия актуальная и совместимая -->
-
-
-
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -147,13 +143,7 @@
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
-
-
-
-
-
     </dependencies>
-
     <build>
         <plugins>
             <plugin>

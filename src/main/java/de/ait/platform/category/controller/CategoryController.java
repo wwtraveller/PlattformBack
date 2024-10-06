@@ -107,15 +107,12 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category or article not found", content = @Content)
     })
     @GetMapping("/categories/findarticles")
-    public List<ResponseArticle> findArticleInCategories(@RequestParam(name = "name") String categoryName,
+    public List<ResponseArticle> findArticleInCategories(@RequestParam(name="name" , required = false) String categoryName,
                                                          @RequestParam(name = "title") String articleTitle) {
-        List<ResponseArticle> foundedArticles = new ArrayList<>();
-        if (categoryName.isEmpty()) {
-            foundedArticles = service.findArticleInCategories(categoryName);
+        if (categoryName != null && !categoryName.isBlank()) {
+            return service.findArticleInCategory(categoryName, articleTitle);
+        } else {
+            return service.findArticleInCategories(articleTitle);
         }
-        if (!categoryName.isBlank()) {
-        foundedArticles = service.findArticleInCategory(categoryName, articleTitle);
-        }
-     return foundedArticles;
     }
 }

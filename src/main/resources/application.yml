@@ -22,6 +22,14 @@ key:
   access: ${ACCESS_KEY}
   refresh: ${REFRESH_KEY}
 
+cloud:
+  aws:
+    s3:
+      endpoint: ${SPACES_ENDPOINT}
+      bucket: ${SPACES_BUCKET}
+      access-key: ${SPACES_ACCESS_KEY}
+      secret-key: ${SPACES_SECRET_KEY}
+
   servlet:
     multipart:
       max-file-size: 10MB

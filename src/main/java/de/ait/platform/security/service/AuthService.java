@@ -85,10 +85,8 @@ public class AuthService {
 
     public  UserResponseDto changePassword(ChangePasswordDto passwordDto){
         UserResponseDto userDto = getAuthenticatedUser();
-
-//        if (passwordDto.getUsername().isBlank() || passwordDto.getOldPassword().isBlank() || passwordDto.getNewPassword().isBlank()) {
-            User user = userService.loadUserByUsername(passwordDto.getUsername());
-            if (Objects.equals(passwordDto.getUsername(), userDto.getUsername())){
+         User user = userService.loadUserByUsername(userDto.getUsername());
+            if (Objects.equals(passwordDto.getNewPassword(), passwordDto.getRepeatPassword())){
                 if (passwordEncoder.matches(passwordDto.getOldPassword(), user.getPassword())){
                     user.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
                     userRepository.save(user);
@@ -99,9 +97,7 @@ public class AuthService {
                 }
             }
             else {
-                throw new FieldIsBlank("Wrong username");
+                throw new FieldIsBlank("Password does not match");
             }
         }
-//        else throw new FieldCannotBeNull("Username or old password cannot blank");
-
 }

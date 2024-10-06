@@ -148,7 +148,7 @@ public class CategoryServiceImp implements CategoryService {
     }
 @Transactional
     @Override
-    public List<ResponseArticle> findArticleInCategories( String title){
+    public List<ResponseArticle> findArticleInCategories(String title){
         List<ResponseArticle> foundedArticles = new ArrayList<>();
         if( title.isEmpty()||title.isBlank()){
             throw new FieldIsBlank("Title oder name is uncorrected");
@@ -157,7 +157,7 @@ public class CategoryServiceImp implements CategoryService {
         for(CategoryResponse category : categoryResponse){
             List<Article> articles = category.getArticles();
             for(Article article : articles){
-                if(article.getTitle().contains(title)){
+                if(article.getTitle().toLowerCase().contains(title.toLowerCase())){
                     foundedArticles.add(mapper.map(article, ResponseArticle.class));
                 }
             }

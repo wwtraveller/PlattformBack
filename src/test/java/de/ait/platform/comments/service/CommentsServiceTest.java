@@ -41,6 +41,7 @@ class CommentsServiceImplTest {
 
     @InjectMocks
     private CommentsServiceImpl commentsServiceImpl;
+
     @Mock
     @Autowired
     private UserRepository userRepository;

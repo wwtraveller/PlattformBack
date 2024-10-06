@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class CommentController {
-@Autowired
+
+    @Autowired
     private final CommentsService commentsService;
 
     @Operation(summary = "Get all comments", description = "Retrieves a list of all comments")
@@ -52,6 +54,7 @@ public class CommentController {
                             schema = @Schema(implementation = CommentsResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
     })
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/comments")
     public CommentsResponseDto createComment(@RequestBody CommentsRequestDto commentDto) {
         return commentsService.save(commentDto);
@@ -64,6 +67,7 @@ public class CommentController {
                             schema = @Schema(implementation = CommentsResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "Comment not found", content = @Content)
     })
+    @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/comments/{id}")
     public CommentsResponseDto updateComment(@Parameter(description = "ID of the comment to update") @PathVariable Long id,
                                              @RequestBody CommentsRequestDto commentDto) {

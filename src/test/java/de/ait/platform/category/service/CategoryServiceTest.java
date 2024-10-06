@@ -111,7 +111,7 @@ public void init(){
     }
 
     @Test
-    void delete() {
+    void CategoryService_delete_ReturnCategory() {
         // Arrange
         Category category = Category
                 .builder()

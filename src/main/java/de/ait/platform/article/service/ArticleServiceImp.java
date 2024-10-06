@@ -78,15 +78,6 @@ public class ArticleServiceImp implements ArticleService {
 
     @Override
     public ResponseArticle createArticle(RequestArticle dto) {
-        if (dto.getTitle() == null) {
-            throw new FieldCannotBeNull("Title cannot be null");
-        }
-        if (dto.getTitle().isBlank()) {
-            throw new FieldIsBlank("Title cannot empty");
-        }
-//        if (!fingByTitle(dto.getTitle()).isEmpty()) {
-//            throw new FieldIsTaken("That title already exist");
-//        }
 
         boolean isEmpty = repository.findAll()
                 .stream()

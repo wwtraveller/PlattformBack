@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class ArticleController {
+
     private final ArticleService service;
 
     @Operation(summary = "Get article by ID", description = "Retrieves an article by its ID")
@@ -46,6 +49,11 @@ public class ArticleController {
                             schema = @Schema(implementation = ResponseArticle.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
     })
+//    @PostMapping("/api/articles")
+//    public ResponseEntity<ResponseArticle> addArticle(@RequestBody RequestArticle requestArticle) {
+//        ResponseArticle responseArticle = service.createArticle(requestArticle);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(responseArticle);
+//    }
     @PostMapping("/articles")
     public ResponseArticle addArticle(@RequestBody RequestArticle article) {
             return service.createArticle(article);
@@ -58,6 +66,7 @@ public class ArticleController {
                             schema = @Schema(implementation = ResponseArticle.class))),
             @ApiResponse(responseCode = "404", description = "Article not found", content = @Content)
     })
+
     @PutMapping("/articles/{id}")
     public ResponseArticle updateArticle(@Parameter(description = "ID of the article to update") @PathVariable Long id,
                                          @RequestBody RequestArticle article) {

@@ -8,6 +8,7 @@ import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.user.dto.UserRequestDto;
 import de.ait.platform.user.dto.UserResponseDto;
 import de.ait.platform.user.entity.User;
+import de.ait.platform.user.reposittory.UserRepository;
 import de.ait.platform.user.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -50,6 +51,9 @@ class AuthServiceTest {
     private ModelMapper mapper;
 
     @Mock
+    private  UserRepository userRepository;
+
+    @Mock
     private Authentication authentication;
 
     private AuthService authService;
@@ -64,7 +68,7 @@ class AuthServiceTest {
         tokenService = Mockito.mock(TokenService.class);
         mapper = Mockito.mock(ModelMapper.class);
         passwordEncoder = Mockito.mock(BCryptPasswordEncoder.class);
-        authService = new AuthService(tokenService, userService, passwordEncoder, mapper);
+        authService = new AuthService(tokenService, userService, passwordEncoder, mapper, userRepository);
         when(mapper.map(any(UserResponseDto.class), any())).thenReturn(new User());
         when(mapper.map(any(UserRequestDto.class), any())).thenReturn(new User());
         when(mapper.map(any(User.class), any())).thenReturn(new UserResponseDto());

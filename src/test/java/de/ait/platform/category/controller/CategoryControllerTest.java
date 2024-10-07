@@ -34,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CategoryController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension .class)
+@ActiveProfiles("test")
 class CategoryControllerTest {
 
     @Autowired

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 @ActiveProfiles("test")
 @DataJpaTest
+@ActiveProfiles("test")
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 class CategoryRepositoryTest {
     @Autowired

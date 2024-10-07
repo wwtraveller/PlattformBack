@@ -14,7 +14,7 @@ COPY pom.xml .
 # также в эту папку копируем наш исходный код
 COPY src src
 # запускаем maven на сборку
-RUN mvn -DskipTests=true clean package
+RUN mvn clean package
 # создаем папку, которая называется dependency и в нее копируем все, что находится внутри нашего jar и имеет расширение jar
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 

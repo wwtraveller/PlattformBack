@@ -1,5 +1,6 @@
 package de.ait.platform.security.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ait.platform.security.dto.RefreshRequestDto;
 import de.ait.platform.security.dto.TokenResponseDto;
 import de.ait.platform.security.exception.CustomAuthException;
@@ -7,7 +8,6 @@ import de.ait.platform.security.exception.InvalidPasswordException;
 import de.ait.platform.security.service.AuthService;
 import de.ait.platform.user.dto.UserLoginDto;
 import de.ait.platform.user.dto.UserResponseDto;
-import de.ait.platform.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,11 +16,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class AuthControllerTest {
@@ -30,13 +30,12 @@ class AuthControllerTest {
     @Mock
     private AuthService authService;
 
-    @Mock
-    private UserService userService;
+
 
     @InjectMocks
     private AuthController authController;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp() {

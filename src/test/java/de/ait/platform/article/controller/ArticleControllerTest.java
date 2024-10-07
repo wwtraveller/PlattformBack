@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 ////@ActiveProfiles("local")
 @WebMvcTest(controllers = ArticleController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 class ArticleControllerTest {
 
     @Autowired

@@ -1,30 +1,59 @@
 package de.ait.platform.user.controller;
 
+//import de.ait.platform.user.dto.UserPhotoUrlDto;
+//import de.ait.platform.user.dto.UserRequestDto;
+//import de.ait.platform.user.dto.UserResponseDto;
+//import de.ait.platform.user.service.SpaceService;
+//import de.ait.platform.user.service.UserService;
+//import io.jsonwebtoken.io.IOException;
+//import io.swagger.v3.oas.annotations.Operation;
+//import io.swagger.v3.oas.annotations.media.Content;
+//import io.swagger.v3.oas.annotations.media.Schema;
+//import io.swagger.v3.oas.annotations.responses.ApiResponse;
+//import io.swagger.v3.oas.annotations.responses.ApiResponses;
+//import lombok.RequiredArgsConstructor;
+//import org.springframework.data.jpa.domain.JpaSort;
+//import org.springframework.http.HttpStatus;
+//import org.springframework.http.ResponseEntity;
+//import org.springframework.web.bind.annotation.*;
+//import org.springframework.web.multipart.MultipartFile;
+//
+////import java.nio.file.Files;
+////import java.nio.file.Path;
+//import java.util.List;
+//
+//
+//import org.springframework.http.ResponseEntity;
+//import org.springframework.web.bind.annotation.PostMapping;
+//import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.multipart.MultipartFile;
+//
+//
+//import java.nio.file.Files;
+//import java.nio.file.Path;
+//import java.util.UUID;
+
+
 import de.ait.platform.user.dto.UserPhotoUrlDto;
 import de.ait.platform.user.dto.UserRequestDto;
 import de.ait.platform.user.dto.UserResponseDto;
 import de.ait.platform.user.service.SpaceService;
 import de.ait.platform.user.service.UserService;
-import io.jsonwebtoken.io.IOException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-//import java.nio.file.Files;
-//import java.nio.file.Path;
-import java.util.List;
-//import java.util.UUID;
-
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -135,52 +164,20 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-//    @PostMapping("/upload-avatar")
-//    public ResponseEntity<String> uploadAvatar(@RequestParam("avatar") MultipartFile file) throws IOException, java.io.IOException {
-//        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-//        JpaSort.Path tempFile = (JpaSort.Path) Files.createTempFile("temp", fileName);
-//        file.transferTo(((java.nio.file.Path) tempFile).toFile());
-//        String fileUrl = spaceService.uploadFile(fileName, (Path) tempFile);
-//        return ResponseEntity.ok(fileUrl);
-//    }
-//
-//    @PostMapping("/upload-avatar")
-//    public String uploadAvatar(@RequestParam("avatar") MultipartFile file) throws IOException {
-//      String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-//      try {
-//          String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-//           JpaSort.Path tempFile = (JpaSort.Path) Files.createTempFile("temp", fileName);
-//        
-          //Path tempFile = Files.createTempFile("temp", fileName);
-//        file.transferTo(tempFile.toFile());
-//        String fileUrl = spaceService.uploadFile(fileName, tempFile);
-//          return tempFile;
-//      }
-
-  //  }
-
-
-
-
-
-
-    @PostMapping("/upload-avatar")
-    public ResponseEntity<String> uploadAvatar(@RequestParam("avatar") MultipartFile file) throws IOException, java.io.IOException {
-        // Генеруємо унікальне ім'я файлу
+@PostMapping("/upload-avatar")
+public ResponseEntity<String> uploadAvatar(@RequestParam("avatar") MultipartFile file) {
+    try {
         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-
-        // Створюємо тимчасовий файл
         Path tempFile = Files.createTempFile("temp", fileName);
-
-        // Переносимо вміст MultipartFile у тимчасовий файл
         file.transferTo(tempFile.toFile());
-
-        // Завантажуємо файл у DigitalOcean Spaces
         String fileUrl = spaceService.uploadFile(fileName, tempFile);
-
-        // Повертаємо URL файлу
         return ResponseEntity.ok(fileUrl);
+    } catch (IOException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error uploading file: " + e.getMessage());
     }
+}
+
 }
 
 

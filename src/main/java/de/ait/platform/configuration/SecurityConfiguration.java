@@ -41,7 +41,7 @@ public class SecurityConfiguration {
                         x -> x
 
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs").permitAll()
-                                .requestMatchers(HttpMethod.POST,"api/upload-avatar").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/upload-avatar").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/check-username").permitAll()
                                 .requestMatchers(HttpMethod.PUT, "/api/changePassword").hasAnyRole("ADMIN","USER")
@@ -85,7 +85,7 @@ public class SecurityConfiguration {
                         .allowedOrigins("http://localhost:8080", "https://platform-qxs32.ondigitalocean.app", "https://platform-qxs32.ondigitalocean.app/api/swagger-ui/index.html", "https://platform-qxs32.ondigitalocean.app/api/swagger-ui/**")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                       .allowCredentials(true);
+                        .allowCredentials(true);
             }
         };
     }

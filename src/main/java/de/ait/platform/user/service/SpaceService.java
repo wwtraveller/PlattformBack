@@ -18,8 +18,8 @@ public class SpaceService {
 
     public SpaceService() {
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
-                "<ваш Access Key>",
-                "<ваш Secret Key>"
+                "<${SPACES_ACCESS_KEY}>",
+                "<${SPACES_SECRET_KEY}>"
         );
 
         this.s3 = S3Client.builder()
@@ -31,12 +31,12 @@ public class SpaceService {
     public String uploadFile(String fileName, Path filePath) {
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket("<имя вашего Space>")
+                    .bucket("<${SPACES_BUCKET}>")
                     .key(fileName)
                     .build();
 
             s3.putObject(putObjectRequest, filePath);
-            return "https://<ваш-space-region>.digitaloceanspaces.com/" + fileName;
+            return "https://<${SPACES_ENDPOINT}>.digitaloceanspaces.com/" + fileName;
 
         } catch (S3Exception e) {
             throw new RuntimeException("Error uploading file to Spaces: " + e.getMessage());

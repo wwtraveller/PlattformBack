@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 
+
+
 @Service
 public class CategoryServiceImp implements CategoryService {
     private final ModelMapper mapper;
@@ -127,34 +129,39 @@ public class CategoryServiceImp implements CategoryService {
 
         return mapper.map(updatedCategory, CategoryResponse.class);
     }
+
 @Transactional
 @Override
     public List<ResponseArticle> findArticleInCategory(String name, String title){
-    List<ResponseArticle> foundedArticles = new ArrayList<>();
-    if(name.isEmpty()|| title.isEmpty()||name.isBlank()||title.isBlank()){
+
+    if(name.isBlank()||title.isBlank()){
         throw new FieldIsBlank("Title oder name is uncorrected");
     }
-    List<CategoryResponse> categoryResponse = findByName(name);
-    for(CategoryResponse category : categoryResponse){
+    List<ResponseArticle> foundedArticles = new ArrayList<>();
+    List<CategoryResponse> categories = findByName(name);
+
+    for(CategoryResponse category : categories){
         List<Article> articles = category.getArticles();
         for(Article article : articles){
-            if(article.getTitle().contains(title)){
+            if(article.getTitle().toLowerCase().contains(title.toLowerCase())){
                 foundedArticles.add(mapper.map(article, ResponseArticle.class));
             }
-
         }
     }
     return foundedArticles;
     }
-@Transactional
+
+    @Transactional
     @Override
-    public List<ResponseArticle> findArticleInCategories(String title){
-        List<ResponseArticle> foundedArticles = new ArrayList<>();
-        if( title.isEmpty()||title.isBlank()){
+    public List<ResponseArticle> findArticleInCategories( String title){
+
+        if( title.isBlank()){
             throw new FieldIsBlank("Title oder name is uncorrected");
         }
-        List<CategoryResponse> categoryResponse = findAll();
-        for(CategoryResponse category : categoryResponse){
+        List<ResponseArticle> foundedArticles = new ArrayList<>();
+        List<CategoryResponse> categories = findAll();
+
+        for(CategoryResponse category : categories){
             List<Article> articles = category.getArticles();
             for(Article article : articles){
                 if(article.getTitle().toLowerCase().contains(title.toLowerCase())){

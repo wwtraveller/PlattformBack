@@ -85,19 +85,19 @@ public class AuthService {
 
     public  UserResponseDto changePassword(ChangePasswordDto passwordDto){
         UserResponseDto userDto = getAuthenticatedUser();
-         User user = userService.loadUserByUsername(userDto.getUsername());
-            if (Objects.equals(passwordDto.getNewPassword(), passwordDto.getRepeatPassword())){
-                if (passwordEncoder.matches(passwordDto.getOldPassword(), user.getPassword())){
-                    user.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
-                    userRepository.save(user);
-                    return mapper.map(user, UserResponseDto.class);
-                }
-                else {
-                    throw new FieldIsTaken("Wrong password");
-                }
+        User user = userService.loadUserByUsername(userDto.getUsername());
+        if (Objects.equals(passwordDto.getNewPassword(), passwordDto.getRepeatPassword())){
+            if (passwordEncoder.matches(passwordDto.getOldPassword(), user.getPassword())){
+                user.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+                userRepository.save(user);
+                return mapper.map(user, UserResponseDto.class);
             }
             else {
-                throw new FieldIsBlank("Password does not match");
+                throw new FieldIsTaken("Wrong password");
             }
         }
+        else {
+            throw new FieldIsBlank("Password does not match");
+        }
+    }
 }

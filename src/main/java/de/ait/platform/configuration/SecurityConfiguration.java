@@ -39,7 +39,9 @@ public class SecurityConfiguration {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         x -> x
-                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs").permitAll()
+
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/upload-avatar").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/check-username").permitAll()
                                 .requestMatchers(HttpMethod.PUT, "/api/changePassword").hasAnyRole("ADMIN","USER")
@@ -69,7 +71,6 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.PUT, "/api/comments/{id}").hasAnyRole("ADMIN","USER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/comments/{id}").hasAnyRole("ADMIN","USER")
                                 .anyRequest().authenticated()
-
                 )
                 .addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

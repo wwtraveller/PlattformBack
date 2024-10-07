@@ -12,19 +12,25 @@
     <artifactId>platform</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>platform</name>
-    <description>platform</description>
-    <url/>
+    <description>A platform application for managing resources and services.</description>
+    <url>http://example.com/platform</url> <!-- Введіть URL свого проекту -->
     <licenses>
-        <license/>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
     </licenses>
     <developers>
-        <developer/>
+        <developer>
+            <id>your-github-id</id>
+            <name>Your Name</name>
+            <email>your.email@example.com</email>
+        </developer>
     </developers>
     <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
+        <connection>scm:git:git://github.com/yourusername/platform.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:yourusername/platform.git</developerConnection>
+        <url>http://github.com/yourusername/platform</url>
     </scm>
     <properties>
         <java.version>21</java.version>
@@ -34,6 +40,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>2.16.9</version>
         </dependency>
 
         <dependency>
@@ -104,13 +116,12 @@
             <version>2.6.0</version>
         </dependency>
 
-        <!-- JUnit 5 -->
-        <!--        <dependency>-->
-        <!--                <groupId>org.junit.jupiter</groupId>-->
-        <!--                <artifactId>junit-jupiter</artifactId>-->
-        <!--                <version>5.9.0</version> &lt;!&ndash; Убедитесь, что версия актуальна &ndash;&gt;-->
-        <!--                <scope>test</scope>-->
-        <!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>software.amazon.awssdk</groupId>-->
+<!--            <artifactId>s3</artifactId>-->
+<!--            <version>2.17.89</version>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -124,7 +135,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.2.6.Final</version> <!-- Убедитесь, что версия актуальная и совместимая -->
+            <version>6.2.6.Final</version>
         </dependency>
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
@@ -146,6 +157,11 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>1.12.526</version> <!-- Актуальна версія -->
         </dependency>
     </dependencies>
     <build>
@@ -182,5 +198,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

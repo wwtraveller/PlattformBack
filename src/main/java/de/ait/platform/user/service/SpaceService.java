@@ -10,13 +10,14 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.nio.file.Path;
+import java.nio.file.Files;
 
 @Service
 public class SpaceService {
 
     private final S3Client s3;
 
-    public SpaceService() {
+    public SpaceService( ) {
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
                 "<${SPACES_ACCESS_KEY}>",
                 "<${SPACES_SECRET_KEY}>"

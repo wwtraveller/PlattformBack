@@ -39,8 +39,9 @@ public class SecurityConfiguration {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         x -> x
-                                .requestMatchers("/upload-avatar").permitAll()
+
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/upload-avatar").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/login", "/api/refresh").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/check-username").permitAll()
                                 .requestMatchers(HttpMethod.PUT, "/api/changePassword").hasAnyRole("ADMIN","USER")

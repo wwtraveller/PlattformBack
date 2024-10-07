@@ -103,6 +103,11 @@
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>1.7.0</version>
         </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>2.16.9</version>
+        </dependency>
 
         <!-- JUnit 5 -->
         <!--        <dependency>-->

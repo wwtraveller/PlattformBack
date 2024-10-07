@@ -1,23 +1,27 @@
 package de.ait.platform.user.controller;
 
-import de.ait.platform.user.dto.UserPhotoFileDto;
 import de.ait.platform.user.dto.UserPhotoUrlDto;
 import de.ait.platform.user.dto.UserRequestDto;
 import de.ait.platform.user.dto.UserResponseDto;
+import de.ait.platform.user.service.SpaceService;
 import de.ait.platform.user.service.UserService;
+import io.jsonwebtoken.io.IOException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 //@CrossOrigin(origins = "*")
@@ -25,6 +29,8 @@ import java.util.List;
 @RequestMapping("/api")
 public class UserController {
     private final UserService service;
+
+    private final SpaceService spaceService;
 
     @Operation(summary = "Create a new user")
     @ApiResponses(value = {
@@ -123,6 +129,15 @@ public class UserController {
     public ResponseEntity<String> addPhotoByFile(@RequestParam("photoFile") MultipartFile photoFile) {
         String response = service.addPhotoByFile(photoFile);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/upload-avatar")
+    public ResponseEntity<String> uploadAvatar(@RequestParam("avatar") MultipartFile file) throws IOException, java.io.IOException {
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        JpaSort.Path tempFile = (JpaSort.Path) Files.createTempFile("temp", fileName);
+        file.transferTo(((java.nio.file.Path) tempFile).toFile());
+        String fileUrl = spaceService.uploadFile(fileName, (Path) tempFile);
+        return ResponseEntity.ok(fileUrl);
     }
 
 }

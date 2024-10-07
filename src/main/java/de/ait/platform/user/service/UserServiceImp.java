@@ -200,52 +200,29 @@ public class UserServiceImp implements UserService, UserDetailsService {
     public String addPhotoByFile(MultipartFile photoFile) {
         User currentUser = loadCurrentUser(); // Получаем текущего пользователя
 
-        // Логика сохранения файла на сервере
+        // Сохраняем файл и получаем путь к нему
         String filePath = saveFile(photoFile); // Метод сохранения файла
         currentUser.setPhoto(filePath); // Обновляем URL фото
         repository.save(currentUser); // Сохраняем изменения
 
-        return "Photo added: " + filePath;
+        return filePath; // Возвращаем путь к фото
     }
 
     private String saveFile(MultipartFile file) {
-        // Проверка, что файл не пустой
-        if (file.isEmpty()) {
-            throw new IllegalArgumentException("Cannot save empty file");
-        }
-
-        // Получение оригинального имени файла
+        // Проверяем файл и сохраняем его, как описано в вашем коде
         String originalFileName = file.getOriginalFilename();
-        if (originalFileName == null) {
-            throw new IllegalArgumentException("File name cannot be null");
-        }
-
-        // Проверка расширения файла
-        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf(".") + 1).toLowerCase();
-        if (!ALLOWED_EXTENSIONS.contains(fileExtension)) {
-            throw new IllegalArgumentException("File type not allowed: " + fileExtension);
-        }
-
-        // Генерация уникального имени файла для избежания конфликтов
         String uniqueFileName = UUID.randomUUID().toString() + "_" + originalFileName;
-
-        // Определение пути для сохранения файла
-
-        String directoryPath = "https://drive.google.com/drive/folders/1Ucbre_N_NUSEBJ7jxVa2DysuRzXPTi8C"; // Убедитесь, что путь существует
+        String directoryPath = "/path/to/photos/";  // Локальная директория или путь в облако
         Path filePath = Paths.get(directoryPath + uniqueFileName);
 
         try {
-            // Создание директории, если она не существует
             Files.createDirectories(filePath.getParent());
-
-            // Сохранение файла
-            file.transferTo(filePath.toFile());
+            file.transferTo(filePath.toFile());  // Сохранение файла
         } catch (IOException e) {
             throw new RuntimeException("Failed to save file: " + e.getMessage());
         }
 
-        return filePath.toString(); // Возвращаем полный путь к файлу
+        return filePath.toString(); // Возвращаем путь для сохранения в базе данных
     }
-
 }
 

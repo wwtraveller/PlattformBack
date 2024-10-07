@@ -78,6 +78,16 @@ public class ArticleServiceImp implements ArticleService {
 
     @Override
     public ResponseArticle createArticle(RequestArticle dto) {
+
+        boolean isEmpty = repository.findAll()
+                .stream()
+                .filter((dto.getTitle().equals("")) ? a -> true : article -> article.getTitle().equalsIgnoreCase(dto.getTitle()))
+                .toList()
+                .isEmpty();
+
+        if (!isEmpty){
+            throw new FieldIsTaken("Title: " + dto.getTitle() + " is already taken");
+        }
         if (dto.getContent() == null) {
             throw new FieldCannotBeNull("Content cannot be null");
         }
@@ -106,6 +116,7 @@ public class ArticleServiceImp implements ArticleService {
         return new ResponseArticle(entity.getId(),entity.getTitle(),entity.getContent(),
                 entity.getPhoto(),entity.getUser().getUsername(),entity.getComments(), entity.getCategories());
     }
+
 
     @Transactional
     @Override
